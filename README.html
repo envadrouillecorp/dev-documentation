@@ -1,0 +1,488 @@
+<!DOCTYPE HTML>
+<html>
+   <head>
+      <meta http-equiv="content-Type" content="text/html; charset=utf-8" />
+      <title>README</title>
+      <style type="text/css">
+         body {
+            margin: 0px 8% 4em 8%;
+            padding-top: 18pt;
+            background-color:white;
+            color:black;
+         }
+         .menu, h1 {
+            color:#990000;
+         }
+         h1 a {
+            color:#000;
+         }
+         .menu a {
+            color:#000;
+            text-decoration:none;
+            border-bottom:1px dotted black;
+         }
+         li {
+            line-height:2em;
+         }
+         .envadrouille {
+            font-style:italic;
+         }
+         .title {
+            font-family:Georgia, "Times New Roman", Times, serif;
+            line-height:1.2;
+            font-size:4.4em;
+            text-align:center;
+         }
+         .language { 
+         }
+
+
+         /* CSS Tree menu styles */
+         ol.tree
+         {
+           padding: 0 0 0 30px;
+         }
+         ol.tree li 
+         { 
+           list-style: none;
+         }
+         li.file
+         {
+           margin-left: -1px !important;
+           background: url(css/document.png) 0 7px no-repeat;
+           color: #000;
+           padding-left: 21px;
+           display: block;
+           position:relative;
+         }
+         li.file a
+         {
+           text-decoration: none;
+         }
+         ol.tree li label
+         {
+           background: url(css/folder-horizontal.png) 15px 7px no-repeat;
+           cursor: pointer;
+           display: block;
+           padding-left: 37px;
+           position:relative;
+         }
+         ol.tree .descr {
+            position:absolute;
+            left:180px;
+            color:#444;
+            font-style:italic;
+            font-size:12px;
+         }
+
+         .toolbar {
+           display:none!important;
+         }
+       </style>
+       <script type="text/javascript">
+       function hide(div) {
+          var d = document.getElementById(div);
+          d.style.display = 'none';
+          return false;
+       }
+
+       function showHide(div) {
+          var d = document.getElementById(div);
+          if(d.style.display == 'none')
+            d.style.display = 'block';
+          else
+            d.style.display = 'none';
+          return false;
+       }
+       </script>
+       <script type="text/javascript" src="js/shCore.js"></script>
+       <script type="text/javascript" src="js/shBrushJScript.js"></script>
+       <script type="text/javascript" src="js/shBrushCss.js"></script>
+       <script type="text/javascript" src="js/shBrushPhp.js"></script>
+       <link href="css/shCore.css" rel="stylesheet" type="text/css" />
+       <link href="css/shThemeDefault.css" rel="stylesheet" type="text/css" />
+   </head>
+   <body>
+      <div class="title">EnVadrouille - Developpers</div>
+
+
+      <div id="en" class="language">
+         <ul class="menu">
+            <li>0. <a href="#en-Gen">General information about EnVadrouille</a></li>
+            <ul>
+              <li>0.1 <a href="#en-Gen-1">Available scripts</a></li>
+              <li>0.2 <a href="#en-Gen-2">Paths, thumbnails, jsons</a></li>
+            </ul>
+            <li>1. <a href="#en-Theme">Create a theme</a></li>
+            <li>1. <a href="#en-Plugin">Create a plugin</a></li>
+            <ul class="menu">
+              <li>2.1 <a href="#en-Plugin-1">Hello world</a></li>
+              <li>2.2 <a href="#en-Plugin-2">Recommandations</a></li>
+              <li>2.3 <a href="#en-Plugin-3">Available classes and hacks</a></li>
+            </ul>
+         </ul>
+
+         <h1>0. <a name="en-Gen">General information about EnVadrouille</a></h1>
+         Here are some general information about EnVadrouille that might be useful to create themes and plugins.
+
+         <h2>0.1 <a name="en-Gen-1">Available scripts</a></h2>
+         In the gallery, you may safely assume that the following API will be automatically loaded:
+         <ul>
+            <li>jQuery v1.7</li>
+            <li>jQuery template plugin, see <a href="https://github.com/jquery/jquery-tmpl">https://github.com/jquery/jquery-tmpl</a></li>
+            <li>jQuery color animation plugin (you can animate background-color, using jQuery animate)</li>
+            <li>jQuery url plugin (you can use $.url)</li>
+            <li>jQuery cookie plugin (you can use $.cookie)</li>
+            <li>jQuery doTimeout plugin, see <a href="http://benalman.com/projects/jquery-dotimeout-plugin/">http://benalman.com/projects/jquery-dotimeout-plugin/</a></li>
+            <li>jQuery ColorBox v1.3.34 to show big pictures thumbnails, see <a href="http://www.jacklmoore.com/colorbox">http://www.jacklmoore.com/colorbox</a></li>
+            <li>A custom script loader named $script, see below.</li>
+         </ul>
+
+         <br/>
+         To know when an API has been loaded, use the $script API as follow:
+         <pre class="brush: js;">
+$script("http://domain/foo.js", "foo", function() {
+   // code that will be executed once foo.js has been loaded
+   // this function is optional, you can call $script with only 2 arguments
+});
+$script.loaded(['foo', 'jquery', 'colorbox'], function() {
+   // code that will get executed once foo, jquery and colorbox have been loaded
+});
+         </pre>
+
+         <br/>
+         The gallery registers the following names, that you may use in $script:
+         <ul>
+            <li><i>jquery</i> for jQuery and all jQuery plugins</li>
+            <li><i>colorbox</i> for jQuery and all jQuery plugins</li>
+            <li><i>jgallery</i> the gallery itself; it is not recommended to use this hook when you are developing plugins (because the gallery will wait for your plugin to be loaded before executing itself and it might create circular dependencies)</li>
+            <li><i>themejs</i> the JavaScript file of the current gallery theme</li>
+         </ul>
+         <br/>
+
+         <h2>0.2 <a name="en-Gen-2">Paths, thumbnails, jsons</a></h2>
+         <table>
+           <tr>
+             <td valign="top" width="1000px" style="padding-right:20px;text-align:justify">
+               <ol class="tree">
+                 <li>
+                   <label for="admin">admin</label> 
+                   <ol>
+                    <li>
+                       <label for="common">common <span class="descr">general libraries, see <a href="#en-Plugin-3">section 2.3</a></span></label> 
+                       <label for="pages">pages <span class="descr">plugins, see <a href="#en-Plugin">section 2</a></label> 
+                    </li>
+                   </ol>
+
+                  <label for="cache">cache</label> 
+                   <ol>
+                    <li>
+                       <label for="json">json</label> 
+                       <ol>
+                          <li>
+                             <li class="file">cache.json <span class="descr">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;json containing the metadata of the index</span></li>
+                             <label for="directoryX">directoryX</label> 
+                             <ol>
+                              <li class="file">cache.json <span class="descr">json containing the metadata of directoryX</span></li>
+                             </ol>
+                          </li>
+                       </ol>
+                       <label for="thumbs">thumbs</label> 
+                       <ol>
+                          <li>
+                             <label for="admin">directoryX</label> 
+                             <ol>
+                              <li class="file">picX_r.jpg <span class="descr">main thumbnail for picX; size configured in the admin</span></li>
+                              <li class="file">picX_b.jpg <span class="descr">big thumbnail, width=350px, height depends on the original height</span></li>
+                              <li class="file">picX_c.jpg <span class="descr">crop thumbnail, 200px*150px</span></li>
+                              <li class="file">picX_m.jpg <span class="descr">small thumbnail, width=150px, height depends on the original height</span></li>
+                             </ol>
+                          </li>
+                       </ol>
+                    </li>
+                   </ol>
+
+                  <label for="pics">pics</label> 
+                  <ol>
+                        <li>
+                           <label for="admin">directoryX</label> 
+                           <ol>
+                            <label for="admin">subdirectoryX</label> 
+                            <li class="file">mygpx.gpx</li>
+                            <li class="file">picX.jpg</li>
+                            <li class="file">vid.ogv</li>
+                            <li class="file">vid.mp4 <span class="descr">vid.ogv and vid.mp4 are the same video with different codecs</span></li>
+                            <li class="file">vid2.ogv</li>
+                           </ol>
+                        </li>
+                     </ol>
+
+                  <label for="themes">themes</label> 
+                  <ol>
+                        <li>
+                           <label for="themeX">themeX</label> 
+                        </li>
+                     </ol>
+
+                  <label for="themes">scripts</label> 
+                 </li>
+               </ol>
+             </td>
+             <td>
+             </td>
+           </tr>
+         </table>
+
+<br/>
+<a name="json-div-a"></a><b>Description of cache.json files:</b>  <a href="#" onclick="return showHide('json-div');">click here</a>
+        <div id="json-div" style="display:none;">
+          <pre class="brush: js;">
+// See bellow for real examples
+// All variables named foo* may be undefined
+{
+  dirs*:[                                                              // list of subdirectories
+    {
+       ID:&lt;display order&gt;,                                             // e.g., 0 
+       url:&lt;name of the directory&gt;,                                    // e.g., 'subdirdirX' 
+       thumbs:[&lt;name of thumbs&gt;],                                      // e.g., ['index_m.jpg', '0_m.jpg'] 
+                                                                       // You can replace _m with _c or _b in your code 
+                                                                       // to access thumbnails of different size 
+       descr:&lt;description&gt;,                                            // e.g., 'foobar' 
+       starred:&lt;true if the directory should be highlighted&gt;,  
+    }
+  ],
+  pics*:[                                                              // list of pictures
+    {
+       url:&lt;name of the picture&gt;,                                      // e.g., foo.jpg
+       fullpath*:&lt;path of the picture (if undefined, path=path of the gallery)&gt; 
+       original:true if the original picture is bigger than the _r thumbnail
+    }
+  ],
+  vids*:[                                                              // list of videos
+    {
+      url:[&lt;nameS of the video&gt;]                                       // e.g., [foo.mp4, foo.ogv]
+    }                                                                  // /!\ videos with same basename but different
+                                                                       // extensions are regrouped!
+  ],
+  gpx*:&lt;PATH of the gpx file of the gallery, '' or undefined when no gpx is available&gt;,
+  gpxtype*:&lt;maps type, "terrain", "satellite" or "roadmap"&gt;
+  descr*:&lt;description of the gallery&gt;
+}
+
+//E.g., for the files presented before
+//    /cache/json/cache.json, the cache.json of the index of the gallery:
+{
+  "dirs":[{"ID":0, "url":"directoryX", "thumbs":['picX_m.jpg'], "descr":"dir descr", starred:false}],
+}
+
+//    /cache/json/directoryX/cache.json, the cache.json of directoryX:
+{
+  "dirs":[{"ID":0, "url":"subdirectoryX", "thumbs":[], "descr":"subdir descr", starred:false}],
+  "pics":[{"url":"picX.jpg", "original":true}],
+  "vids":[{"url":["vid.mp4", "vid.ogv"]}, {"url":["vid2.ogv"]}],
+  "gpx":"pics/directoryX/mygpx.gpx",
+  "gpxtype":"terrain",
+  "descr":"dir descr",
+}
+              </pre>
+         </div>
+
+
+         <h1>1. <a name="en-Theme">Create a theme</a></h1>
+         <div style="display:inline-block;text-align:justify;">
+           Create a folder in the <i>/themes</i> directory of your EnVadrouille gallery with two files: <i>main.js</i> and <i>main.css</i>. Once these files created, update the administration options to add your theme to the gallery. If you start from an existing theme, creating your own theme might take you less than 5 minutes!<br/>Click on the files bellow to show the minimal content of the css and js files.<br/>
+         </div>
+         <ol class="tree">
+           <li>
+             <label for="themes">themes</label> 
+             <ol>
+               <li>
+                 <label for="folder1">MyTheme</label> 
+                 <ol>
+                   <li class="file"><a href="#" onclick="hide('theme-js'); return showHide('theme-css');">main.css</a></li>
+                   <li class="file"><a href="#" onclick="hide('theme-css'); return showHide('theme-js');">main.js</a></li>
+                  </ol>
+               </li>
+             </ol>
+           </li>
+         </ol>
+
+        <div id="theme-css" style="display:none;">
+            There are only two special requirement for the css file. Your css file MUST contain a rule <b>body</b> with a <i>background-color</i> and a <i>color</i> property.
+            <pre class="brush: css;">
+body {                      /* mandatory */
+  background-color:#151515; /* mandatory */
+  color:#FFF;               /* mandatory */
+}
+            </pre>
+
+            This rules are used by the administration to determine the background and foreground colors of your theme. No other rule is enforced. To know which css rules to create, you can either start from an existing theme or look inside the main EnVadrouille /index.html file to find the templates used by the gallery.
+         </div>
+
+         <div id="theme-js" style="display:none;">
+            A theme must implement 8 JavaScript functions. Most of these functions are called with a json argument described <a href="#json-div-a" onclick="showHide('json-div');">here</a>. You can add fields to this json but you must NOT alter existing fields (because they might be used internally or by other themes).<br/>The simplest way to create this JavaScript file is to start from an existing theme.
+<br/>
+          <pre class="brush: js;">
+/*
+* Called on all pages, with or without an argument. May be used to display a breadcrumb or anything you want.
+* @json: /!\ the json being displayed or *undefined* when performing a search
+*/
+function showHeader(json) {
+   // Simplest code: do nothing.
+}
+
+/*
+* Called to display galleries.
+* @json: the json being displayed; galleries are in the json.dirs field.
+* @isGalleryIndex: true if the displayed page is the main gallery page.
+*/
+function showDirs(json, isGalleryIndex) {
+	if(!json.dirs)
+		return;
+
+  var dirUrl = jGalleryModel.pageToUrl(jGallery.currentPage);
+  for (var i in json.dirs) {
+      if(!json.dirs[i].completeurl)
+         json.dirs[i].completeurl = dirUrl+json.dirs[i].url;
+      if(!json.dirs[i].thumb &amp;&amp; json.dirs[i].thumbs[0])
+         json.dirs[i].thumb = dirUrl+json.dirs[i].url+'/'+json.dirs[i].thumbs[0];
+      if(!json.dirs[i].title)
+         json.dirs[i].title = json.dirs[i].url;
+      /* you may also want to set json.dirs[i].day , .month, .year and .descr */
+      /* see the dirTpl template in /index.html to get the list of variables used by the template */
+
+      $("#dirTpl").tmpl(json.dirs[i]).appendTo('#content');
+
+      $('#dir'+json.dirs[i].ID).css('opacity', 1);
+      $('#dir'+json.dirs[i].ID+' img').css('opacity', 1);
+      $('#dir'+json.dirs[i].ID).click({url:json.dirs[i].url}, function(ev) {
+        ev.preventDefault();
+        jGallery.switchPage(dirUrl+ev.json.url);
+      });
+  }
+}
+
+/*
+* Called to display pictures
+* @json: the json being displayed; pictures are in the json.pics field.
+*/
+function showPics(json) {
+  if(!json.pics)
+    return;
+
+  var pics = [];
+  var dirUrl = jGalleryModel.pageToUrl(jGallery.currentPage);
+  for (var i in json.pics) {
+    pics[i] = {
+      ID:i,
+      url:(json.pics[i].fullpath?json.pics[i].fullpath:dirUrl),
+      big:json.pics[i].url,
+      thumb:json.pics[i].url.replace(/\.([^\.]+)$/, "_c.$1"), //pic.jpg -&gt; pic_c.jpg
+      original:json.pics[i].original
+    };
+    $("#picTpl").tmpl(pics[i]).appendTo('#content');
+    $('#pic'+i+' img').css('opacity', 1);
+  }
+
+  $("a[rel*='gal']").colorbox({slideshow:true, slideshowSpeed:3500, slideshowAuto:false, loop:false, maxWidth:'90%', maxHeight:'90%'});
+}
+
+/*
+* Called to display videos
+* @json: the json being displayed; videos are in the json.vids field.
+*/
+function showVids(json) {
+  if(!json.vids)
+    return;
+
+  var dirUrl = jGalleryModel.pageToUrl(jGallery.currentPage);
+  var vids = [];
+  for (var i in json.vids) {
+    vids[i] = {
+      ID:i,
+      vid:json.vids[i].url,
+      path:dirUrl,
+      h:360,
+      w:640
+    };
+    $("#vidTpl").tmpl(vids[i]).appendTo('#content');
+  }
+}
+
+/*
+* Called to display a gpx file
+* @json: the json being displayed; gpx is in the json.gpx field.
+*/
+function showGps(json) {
+  if(json.gpx) {
+    $("#gpsTpl").tmpl().appendTo('#content');
+    jGallery.showGPX(json);
+  }
+}
+
+/*
+* Called to display a search result
+* @dataFull: the galleries that match all searched keywords
+* @dataPartial: the galleries that some of the searched keywords
+* @keywords: the searched keywords
+*/
+function showSearch(dataFull, dataPartial, keywords) {
+  if(dataFull.length) {
+    showSearchResults(dataFull, keywords);
+  }
+  if(dataPartial.length) {
+    showSearchResults(dataPartial, keywords);
+  }
+}
+function showSearchResults(data, regs) {
+  if(!data)
+    return;
+
+  for (var i in data) {
+    var res = {};
+    res.ID = data[i].ID;
+    res.url = data[i].url;
+    res.descr = data[i].descr;
+    res.starred = data[i].starred;
+    res.completeurl = data[i].url;
+
+    res.title = jGallery.highlightText(data[i].url, keywords);
+    res.thumb = data[i].url+'/'+data[i].thumbs[0];
+
+    $("#dirTpl").tmpl(res).appendTo('#search_results');
+    $('#dir'+res.ID).click({url:res.url}, function(ev) {
+      ev.preventDefault();
+      jGallery.switchPage(ev.data.url);
+    });
+  }
+}
+
+/*
+ * Called to display an error.
+ * @data: use data.Error to get the error message
+ */
+function showError(data) {
+  $("#errorTpl").tmpl(data).appendTo('#content');
+}
+
+/*
+ * Called before displaying the first page and when the user 
+ * changes the gallery language.
+ * All text in &lt;... class="translate"&gt;&lt;/...&gt; markups will
+ * be automatically translated for you.
+ * @lang: 'en', 'fr', ...
+ */
+function changeThemeLang(lang) {
+  if(l == 'fr') {
+    config.tr['Hello'] = 'Salut';
+    // &lt;span class="translate"&gt;Hello&lt;span&gt; will be shown as "Salut" in French
+  }
+}
+            </pre>
+         </div>
+               </div>
+      <script type="text/javascript">
+        SyntaxHighlighter.all()
+      </script>
+   </body>
+</html>
