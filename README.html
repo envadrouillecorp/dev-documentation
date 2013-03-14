@@ -134,7 +134,7 @@
             <li>jQuery url plugin (you can use $.url)</li>
             <li>jQuery cookie plugin (you can use $.cookie)</li>
             <li>jQuery doTimeout plugin, see <a href="http://benalman.com/projects/jquery-dotimeout-plugin/">http://benalman.com/projects/jquery-dotimeout-plugin/</a></li>
-            <li>jQuery ColorBox v1.3.34 to show big pictures thumbnails, see <a href="http://www.jacklmoore.com/colorbox">http://www.jacklmoore.com/colorbox</a></li>
+            <li>jQuery ColorBox v1.3.34 (slideshow plugin), see <a href="http://www.jacklmoore.com/colorbox">http://www.jacklmoore.com/colorbox</a></li>
             <li>A custom script loader named $script, see below.</li>
          </ul>
 
@@ -150,14 +150,6 @@ $script.loaded(['foo', 'jquery', 'colorbox'], function() {
 });
          </pre>
 
-         <br/>
-         The gallery registers the following names, that you may use in $script:
-         <ul>
-            <li><i>jquery</i> for jQuery and all jQuery plugins</li>
-            <li><i>colorbox</i> for jQuery and all jQuery plugins</li>
-            <li><i>jgallery</i> the gallery itself; it is not recommended to use this hook when you are developing plugins (because the gallery will wait for your plugin to be loaded before executing itself and it might create circular dependencies)</li>
-            <li><i>themejs</i> the JavaScript file of the current gallery theme</li>
-         </ul>
          <br/>
 
          <h2>0.2 <a name="en-Gen-2">Paths, thumbnails, jsons</a></h2>
@@ -317,6 +309,34 @@ body {                      /* mandatory */
             </pre>
 
             This rules are used by the administration to determine the background and foreground colors of your theme. No other rule is enforced. To know which css rules to create, you can either start from an existing theme or look inside the main EnVadrouille /index.html file to find the templates used by the gallery.
+            <br/><br/>
+            The gallery will work with this single rule (but won't look nice...). The only feature that won't show up are maps because the map container has a default height of 0px. To show the maps, without any decoration, add these rules:
+
+            <pre class="brush: css;">
+.gps {
+	position:relative;
+}
+.gpscanvas {
+	height:320px;
+}
+.gpschart {
+	display:none; /* chart is hidden by default */
+	height:200px;
+}
+.gpsadvanced {
+  display:none; /* button to show charts will be
+                   displayed automatically when
+                   the gpx has been loaded */
+  position:absolute;
+  top:280px;
+  left:50%;
+  cursor:pointer;
+}
+.gpsadvanced:before {
+  content:"Show stats";
+}
+            </pre>
+
          </div>
 
          <div id="theme-js" style="display:none;">
@@ -324,44 +344,53 @@ body {                      /* mandatory */
 <br/>
           <pre class="brush: js;">
 /*
+ * Boolean to tell whether you want the gallery to perform smooth
+ * transition between pages (fadeIn/fadeOut)
+ */
+var animateContent = false;
+
+/*
 * Called on all pages, with or without an argument. May be used to display a breadcrumb or anything you want.
 * @json: /!\ the json being displayed or *undefined* when performing a search
 */
 function showHeader(json) {
    // Simplest code: do nothing.
 }
-
+ 
 /*
 * Called to display galleries.
 * @json: the json being displayed; galleries are in the json.dirs field.
 * @isGalleryIndex: true if the displayed page is the main gallery page.
 */
 function showDirs(json, isGalleryIndex) {
-	if(!json.dirs)
-		return;
-
+    if(!json.dirs)
+        return;
+ 
+  var dirs = [];
   var dirUrl = jGalleryModel.pageToUrl(jGallery.currentPage);
   for (var i in json.dirs) {
-      if(!json.dirs[i].completeurl)
-         json.dirs[i].completeurl = dirUrl+json.dirs[i].url;
-      if(!json.dirs[i].thumb &amp;&amp; json.dirs[i].thumbs[0])
-         json.dirs[i].thumb = dirUrl+json.dirs[i].url+'/'+json.dirs[i].thumbs[0];
-      if(!json.dirs[i].title)
-         json.dirs[i].title = json.dirs[i].url;
-      /* you may also want to set json.dirs[i].day , .month, .year and .descr */
+      dirs[i] = {
+          ID:i,
+          completeurl:json.dirs[i].completeurl || (dirUrl+json.dirs[i].url),
+          thumb:json.dirs[i].thumb || (dirUrl+json.dirs[i].url+'/'+json.dirs[i].thumbs[0]),
+          title:json.dirs[i].title || json.dirs[i].url,
+          descr:json.dirs[i].descr,
+      };
+      /* you may also want to set .day , .month, .year and .starred  */
+      /* you can also specify a .separator (html string) that will show before the directory */
       /* see the dirTpl template in /index.html to get the list of variables used by the template */
-
-      $("#dirTpl").tmpl(json.dirs[i]).appendTo('#content');
-
-      $('#dir'+json.dirs[i].ID).css('opacity', 1);
-      $('#dir'+json.dirs[i].ID+' img').css('opacity', 1);
-      $('#dir'+json.dirs[i].ID).click({url:json.dirs[i].url}, function(ev) {
+ 
+      $("#dirTpl").tmpl(dirs[i]).appendTo('#content');
+ 
+      $('#dir'+dirs[i].ID).css('opacity', 1);
+      $('#dir'+dirs[i].ID+' img').css('opacity', 1);
+      $('#dir'+dirs[i].ID).click({url:json.dirs[i].url}, function(ev) {
         ev.preventDefault();
-        jGallery.switchPage(dirUrl+ev.json.url);
+        jGallery.switchPage(dirUrl+ev.data.url);
       });
   }
 }
-
+ 
 /*
 * Called to display pictures
 * @json: the json being displayed; pictures are in the json.pics field.
@@ -369,7 +398,7 @@ function showDirs(json, isGalleryIndex) {
 function showPics(json) {
   if(!json.pics)
     return;
-
+ 
   var pics = [];
   var dirUrl = jGalleryModel.pageToUrl(jGallery.currentPage);
   for (var i in json.pics) {
@@ -383,10 +412,10 @@ function showPics(json) {
     $("#picTpl").tmpl(pics[i]).appendTo('#content');
     $('#pic'+i+' img').css('opacity', 1);
   }
-
+ 
   $("a[rel*='gal']").colorbox({slideshow:true, slideshowSpeed:3500, slideshowAuto:false, loop:false, maxWidth:'90%', maxHeight:'90%'});
 }
-
+ 
 /*
 * Called to display videos
 * @json: the json being displayed; videos are in the json.vids field.
@@ -394,7 +423,7 @@ function showPics(json) {
 function showVids(json) {
   if(!json.vids)
     return;
-
+ 
   var dirUrl = jGalleryModel.pageToUrl(jGallery.currentPage);
   var vids = [];
   for (var i in json.vids) {
@@ -408,7 +437,7 @@ function showVids(json) {
     $("#vidTpl").tmpl(vids[i]).appendTo('#content');
   }
 }
-
+ 
 /*
 * Called to display a gpx file
 * @json: the json being displayed; gpx is in the json.gpx field.
@@ -419,7 +448,7 @@ function showGps(json) {
     jGallery.showGPX(json);
   }
 }
-
+ 
 /*
 * Called to display a search result
 * @dataFull: the galleries that match all searched keywords
@@ -434,10 +463,10 @@ function showSearch(dataFull, dataPartial, keywords) {
     showSearchResults(dataPartial, keywords);
   }
 }
-function showSearchResults(data, regs) {
+function showSearchResults(data, keywords) {
   if(!data)
     return;
-
+ 
   for (var i in data) {
     var res = {};
     res.ID = data[i].ID;
@@ -445,10 +474,10 @@ function showSearchResults(data, regs) {
     res.descr = data[i].descr;
     res.starred = data[i].starred;
     res.completeurl = data[i].url;
-
+ 
     res.title = jGallery.highlightText(data[i].url, keywords);
     res.thumb = data[i].url+'/'+data[i].thumbs[0];
-
+ 
     $("#dirTpl").tmpl(res).appendTo('#search_results');
     $('#dir'+res.ID).click({url:res.url}, function(ev) {
       ev.preventDefault();
@@ -456,7 +485,7 @@ function showSearchResults(data, regs) {
     });
   }
 }
-
+ 
 /*
  * Called to display an error.
  * @data: use data.Error to get the error message
@@ -464,16 +493,16 @@ function showSearchResults(data, regs) {
 function showError(data) {
   $("#errorTpl").tmpl(data).appendTo('#content');
 }
-
+ 
 /*
- * Called before displaying the first page and when the user 
+ * Called before displaying the first page and when the user
  * changes the gallery language.
  * All text in &lt;... class="translate"&gt;&lt;/...&gt; markups will
  * be automatically translated for you.
  * @lang: 'en', 'fr', ...
  */
 function changeThemeLang(lang) {
-  if(l == 'fr') {
+  if(lang == 'fr') {
     config.tr['Hello'] = 'Salut';
     // &lt;span class="translate"&gt;Hello&lt;span&gt; will be shown as "Salut" in French
   }
