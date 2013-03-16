@@ -765,7 +765,7 @@ known_sentences.concat({
          </pre>
          <div id="option-en">
          <pre class="brush: js;">
-/* This file will be used by the option */
+/* This file will be used by your scripts */
 known_sentences.concat({
    't1':'Translation 1',
    't2':'{0} done / {1} total',
@@ -773,8 +773,30 @@ known_sentences.concat({
       return 'Translation 3: ' + arg[0];
    },
 };
+
+// Elements with a class="translate" will be translated automatically after the page load.
+// However if you add elements later on (e.g., after receiving an AJAX response), you must
+// inform the gallery that it must perform new translations. This can be done in a single line:
+$(".translate").translate();
+
+// If you want to use arguments in your translations, you have to put the translated text directly
+// in your templates as follows:
+$("...").append(... + t('t2', [ 0, 1 ]);
+$("...").append(... + t('t3', [ 0, 1, 2, 3, ... ]);
          </pre>
          </div>
+
+        Another great feature of the administration is the information system. You can either inform the user of a success, warn him or report an error. Note that if an AJAX call fails, an error with detailed information will show up automatically.
+
+         <pre class="brush: js;">
+function inform(tag, type, add, params, div);
+
+// Will show up an "success" div on top of the page containing
+// the translation of t2 (e.g., "done 0 / 1" here.
+// true is used to say that you want to add the div (false will remove the div)
+// By default the div show on top of the page but you can specify the container div using the div parameter
+inform('t2', 'success', true, [0, 1]);
+         </pre>
 
         <h2>2.3 <a name="en-Plugin-3">Gallery plugin</a></h2>
 
