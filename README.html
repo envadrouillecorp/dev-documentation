@@ -9,6 +9,7 @@
             padding-top: 18pt;
             background-color:white;
             color:black;
+            text-align:justify;
          }
          .menu, h1 {
             color:#990000;
@@ -118,9 +119,15 @@
             <li>1. <a href="#en-Plugin">Create a plugin</a></li>
             <ul class="menu">
               <li>2.0 <a href="#en-Plugin-0">Philosophy</a></li>
-              <li>2.1 <a href="#en-Plugin-1">Hello world</a></li>
-              <li>2.2 <a href="#en-Plugin-2">Available classes and hacks</a></li>
-              <li>2.3 <a href="#en-Plugin-3">Gallery plugin</a></li>
+              <li>2.1 <a href="#en-Plugin-1">Administration plugin - Hello world</a></li>
+              <li>2.2 <a href="#en-Plugin-2">Gallery plugin - Hello World</a></li>
+              <li>2.3 <a href="#en-Plugin-3">Available classes and hacks</a></li>
+              <ul>
+                  <li>2.2.1 <a href="en-Plugin-3-1">Files manipulation</a></li>
+                  <li>2.2.2 <a href="en-Plugin-3-2">Use multiple JS files in an administration plugin</a></li>
+                  <li>2.2.3 <a href="en-Plugin-3-3">Translation in the administration</a></li>
+                  <li>2.2.4 <a href="en-Plugin-3-4">Information popups in the administration</a></li>
+              </ul>
               <li>2.4 <a href="#en-Plugin-4">Complete example</a></li>
             </ul>
          </ul>
@@ -142,7 +149,7 @@
          </ul>
 
          <br/>
-         To know when an API has been loaded, use the $script API as follow:
+         To know when an API has been loaded, use the $script API as follows:
          <pre class="brush: js;">
 $script("http://domain/foo.js", "foo", function() {
    // code that will be executed once foo.js has been loaded
@@ -528,7 +535,7 @@ function changeThemeLang(lang) {
          Plugins can also be used to modify the gallery (vs the administration). In order to do that, a plugin can tell the gallery to load a javascript file before showing up. The JavaScript file might register various hooks in the gallery to extend its functionality. See the <a href="#en-Plugin-3">Gallery plugin</a> section for more details.</a>
 
 
-         <h2>2.1 <a name="en-Plugin-1">Hello World</a></h2>
+         <h2>2.1 <a name="en-Plugin-1">Administration Plugin - Hello World</a></h2>
 
          Creating a plugin can be a simple as creating a directory with a php file. We will also use a js and a tpl file to make the example a bit more interesting. Create these files and update the administration options. An Hello World tab will be added to the administration. Click on the files for more details.
 
@@ -644,161 +651,7 @@ class Pages_Myplugin_Index {
             </pre>
          </div>
 
-
-        <h2>2.2 <a name="en-Plugin-2">Available classes and hacks</a></h2>
-The most important abstraction of the gallery are files. The gallery automatically provide you cool abstractions to manipulate files, pictures and jsons. We recommend that you use these abstractions.
-
-            <pre class="brush: php;">
-// new File('./path/to/file.txt');
-class File {
-   public $name;      //file.txt
-   public $path;      //./path/to
-   public $extension; //txt
-   public getContent();
-   public isWritable();
-   public writeContent($data);
-   public remove();
-}
-class File_Dir extends File {
-   function getFiles();
-   function getDirs();
-   function getPictures();
-   function getJSONs();
-   //...
-   public remove();
-}
-class File_JSON extends File {
-   function get(); // return an array describing the content
-   function get($entry); // return a specific entry
-   function setContent($array); // set the content of the JSON
-   function writeContent(); // write the content
-}
-class File_Pic {
-  // ...
-}
-
-// Note that by default, all pictures in a directory (.jpg, .gif, .png) will be of type File_Pic,
-// all JSON of type File_JSON, etc. You might want to extend these types and have the gallery use
-// your type automatically as follows:
-
-// Create a file named mypic.php in pages/myplugin/php/ with
-class MyPic extends File_Pic {
-}
-
-// and in you plugin index pages/myplugin/index.php:
-class Pages_Myplugin_Index {
-   // ...
-
-
-   public static function setupAutoload() {
-      AutoLoader::$autoload_path[] = "./pages/myplugin/php/";
-      File_Factory::registerExtension("png", "MyPic"); // all png files are of type MyPic!
-      // now, png files in $dir-&gt;getFiles() or -&gt;getPics() are of type MyPic.
-      // You can register the special extension "dir" for directories.
-   }
-}
-         </pre>
-
-
-         By default the gallery will look for a main.js file in the script directory of your plugin. You may want to inform the gallery that you want to load other js files as follow:
-         <pre class="brush: php;">
-class Pages_Myplugin_Index {
-   // ...
-
-   static public function mainAction() {
-      $template = new liteTemplate();
-      $template-&gt;extraJS[] = './pages/myplugin/scripts/extrajs.js';
-      $template-&gt;showPage('index');
-      $template-&gt;view();
-   }
-}
-         </pre>
-
-         
-         The gallery will also automatically try to load translation files for your plugins. You need exactly two files for each language: one file that will be used to render the content of your templates and one file that will be used by the option for the description of your plugin options. All text that is in a DOM element with a class "translate" will be translated (that works for inputs and selects too). E.g.,
-         &lt;span class="translate"&gt;test_translate&lt;/span&gt; will look for a way to translate test_translate in the current administration language.
-         Translation in the administration is way more powerful than in the gallery index and you may want to use function or special formatters to translate the content of your divs. See bellow.
-
-         Sample translation files for a plugin:
-         <ol class="tree">
-            <li>
-            <label for="themes">pages</label> 
-            <ol>
-               <li>
-               <label for="folder1">myplugin</label> 
-               <ol>
-                  <li class="file"><a href="#" onclick="hide('hello-js'); hide('hello-tpl'); return showHide('hello-index');">index.php</a></li>
-                  <li>
-                     <label for="folder1">scripts</label>
-                     <ol>
-                     <li>
-                        <label for="folder1">lang</label>
-                        <ol>
-                           <li class="file"><a href="#" onclick="">en.js</a></li>
-                           <li class="file"><a href="#" onclick="">option_en.js</a></li>
-                           <li class="file"><a href="#" onclick="">fr.js</a></li>
-                           <li class="file"><a href="#" onclick="">option_fr.js</a></li>
-                        </ol>
-                     </li>
-                     </ol>
-                  </li>
-               </ol>
-               </li>
-            </ol>
-            </li>
-         </ol>
-
-         <div id="option-en">
-         <pre class="brush: js;">
-/* This file will be used by the option */
-known_sentences.concat({
-   'Hello World':'Hello World plugin',
-   'my_option':'My option',
-};
-         </pre>
-         <pre class="brush: js;">
-/* This file will be used by the option */
-known_sentences.concat({
-   'Hello World':'Plugin Hello World',
-   'my_option':'Mon option',
-};
-         </pre>
-         <div id="option-en">
-         <pre class="brush: js;">
-/* This file will be used by your scripts */
-known_sentences.concat({
-   't1':'Translation 1',
-   't2':'{0} done / {1} total',
-   't3':function(args) {
-      return 'Translation 3: ' + arg[0];
-   },
-};
-
-// Elements with a class="translate" will be translated automatically after the page load.
-// However if you add elements later on (e.g., after receiving an AJAX response), you must
-// inform the gallery that it must perform new translations. This can be done in a single line:
-$(".translate").translate();
-
-// If you want to use arguments in your translations, you have to put the translated text directly
-// in your templates as follows:
-$("...").append(... + t('t2', [ 0, 1 ]);
-$("...").append(... + t('t3', [ 0, 1, 2, 3, ... ]);
-         </pre>
-         </div>
-
-        Another great feature of the administration is the information system. You can either inform the user of a success, warn him or report an error. Note that if an AJAX call fails, an error with detailed information will show up automatically.
-
-         <pre class="brush: js;">
-function inform(tag, type, add, params, div);
-
-// Will show up an "success" div on top of the page containing
-// the translation of t2 (e.g., "done 0 / 1" here.
-// true is used to say that you want to add the div (false will remove the div)
-// By default the div show on top of the page but you can specify the container div using the div parameter
-inform('t2', 'success', true, [0, 1]);
-         </pre>
-
-        <h2>2.3 <a name="en-Plugin-3">Gallery plugin</a></h2>
+        <h2>2.2 <a name="en-Plugin-2">Gallery plugin - Hello World</a></h2>
 
        Creating a plugin to enhance the gallery is very simple. It only requires the creation of 2 files. Once you have created these two files, go in the administration option and update the options to register you plugin.
 
@@ -823,7 +676,7 @@ inform('t2', 'success', true, [0, 1]);
          </ol>
 
          <div id="gal-index" style="display:none">
-            The index.php file contains two functions. The getOption function (optional) declares an option value that will be "exported" in the gallery and the getUserScripts function tells the gallery which javascript files to load when the plugin is active.
+            The index.php file contains two functions. The <i>getOptions</i> function declares an option value that will be "exported" in the gallery and the <i>getUserScripts</i> function tells the gallery which javascript files to load when the plugin is active.
 
             <pre class="brush: php;">
 class Pages_Myplugin_Index {
@@ -849,7 +702,7 @@ class Pages_Myplugin_Index {
             </pre>
          </div>
          <div id="gal-js" style="display:none">
-         The javascript file is also very simple. You simply have to register your plugin in the gallery.
+         The javascript file is also very simple. Your plugin can declare 3 functions that will be used automatically by the gallery. You can also overload functions of the gallery to extend them; see bellow.
 
             <pre class="brush: js;">
 var MyPlugin = {
@@ -896,6 +749,158 @@ var MyPlugin = {
 config.pluginsInstances.push(MyPlugin);
          </pre>
         </div>
+
+
+        <h2>2.2 <a name="en-Plugin-3">Available classes and hacks</a></h2>
+
+         <h3>2.2.0 <a name="en-Plugin-3-0">Available classes</a></h3>
+TODO
+
+         <h3>2.2.1 <a name="en-Plugin-3-1">Files manipulation</a></h3>
+The main task of the administration is to deal with files (pictures, json) and directories. The gallery provides cool abstractions to ease the most common operations on files and directories. We recommend that you use these abstractions. See <a href="">here</a> for the complete lists of classes that you may use in the gallery.
+
+<br/>
+If these classes do not meet your needs, you can extend them and make the gallery use your own abstractions instead of the generic ones. For example, without any modifications, all png files are of type File_Pic. If you want all png files to be of type MyPic, here is how to do it:
+
+            <pre class="brush: php;" style="display:none">
+// Create a file named mypic.php in pages/myplugin/php/ with
+class MyPic extends File_Pic {
+   public function __construct($path, $name = '') {
+       parent::__construct($path, $name);
+       // custom initialization
+   }
+
+   public function customFunction() { };
+}
+
+// and in you plugin index pages/myplugin/index.php:
+class Pages_Myplugin_Index {
+   public static function setupAutoload() {
+      AutoLoader::$autoload_path[] = "./pages/myplugin/php/";
+      File_Factory::registerExtension("png", "MyPic"); // all png files are of type MyPic!
+
+      // Note: You can register the special extension "dir" for directories.
+   }
+
+   public static function mainAction() { 
+      $dir = new Dir('./path');
+      $files = $dir-&gt;getPics();
+      foreach($files as $file) {
+         // all png files are of type MyPic
+         if(strtolower($file-&gt;extension) === 'png')
+            $file-&gt;customFunction(); // works
+      }
+   }
+}
+         </pre>
+
+
+         <h3>2.2.2 <a name="en-Plugin-3-2">Use multiple JS files in an administration plugin</a></h3>
+         By default the gallery will look for a main.js file in the script directory of your plugin. You may want to inform the gallery that you want to load other js files as follows:
+         <pre class="brush: php;">
+class Pages_Myplugin_Index {
+   // ...
+
+   static public function mainAction() {
+      $template = new liteTemplate();
+      $template-&gt;extraJS[] = './pages/myplugin/scripts/extrajs.js';
+      $template-&gt;showPage('index');
+      $template-&gt;view();
+   }
+}
+         </pre>
+
+         
+         <h3>2.2.3 <a name="en-Plugin-3-3">Translation in the administration</a></h3>
+         The gallery will also automatically try to load translation files for your plugins. You need exactly two files for each language: one file that will be used to render the content of your templates and one file that will be used for the description of your plugin options. All text that is in a DOM element with a class "translate" will be translated (that works for inputs and selects too).
+
+<br/>
+E.g.,
+         &lt;span class="translate"&gt;test_translate&lt;/span&gt; will look for a way to translate test_translate in the current administration language.<br/><br/>
+         Translation in the administration is way more powerful than in the gallery and you may want to use function or special formatters to translate the content of your divs. See bellow.
+
+         Sample translation files for a plugin:
+         <ol class="tree">
+            <li>
+            <label for="themes">pages</label> 
+            <ol>
+               <li>
+               <label for="folder1">myplugin</label> 
+               <ol>
+                  <li class="file"><a href="#" onclick="hide('hello-js'); hide('hello-tpl'); return showHide('hello-index');">index.php</a></li>
+                  <li>
+                     <label for="folder1">scripts</label>
+                     <ol>
+                     <li>
+                        <label for="folder1">lang</label>
+                        <ol>
+                           <li class="file"><a href="#" onclick="hide('lang-option-js'); return showHide('lang-js');">en.js</a></li>
+                           <li class="file"><a href="#" onclick="hide('lang-js'); return showHide('lang-option-js');">option_en.js</a></li>
+                           <li class="file"><a href="#" onclick="hide('lang-option-js'); return showHide('lang-js');">fr.js</a></li>
+                           <li class="file"><a href="#" onclick="hide('lang-js'); return showHide('lang-option-js');">option_fr.js</a></li>
+                        </ol>
+                     </li>
+                     </ol>
+                  </li>
+               </ol>
+               </li>
+            </ol>
+            </li>
+         </ol>
+
+         <div id="lang-option-js" style="display:none">
+option_en.js and option_fr.js files:
+         <pre class="brush: js;">
+/* This file will be used by the option */
+known_sentences.concat({
+   'Hello World':'Hello World plugin',
+   'my_option':'My option',
+};
+         </pre>
+         <pre class="brush: js;">
+/* This file will be used by the option */
+known_sentences.concat({
+   'Hello World':'Plugin Hello World',
+   'my_option':'Mon option',
+};
+         </pre>
+         </div>
+         <div id="lang-js" style="display:none">
+en.js file, fr.js file would contain the same content but translated:
+         <pre class="brush: js;">
+/* This file will be used by your scripts */
+known_sentences.concat({
+   't1':'Translation 1',
+   't2':'{0} done / {1} total',
+   't3':function(args) {
+      return 'Translation 3: ' + arg[0];
+   },
+};
+
+// Elements with a class="translate" will be translated automatically after the page load.
+// However if you add elements later on (e.g., after receiving an AJAX response), you must
+// inform the gallery that it must perform new translations. This can be done in a single line:
+$(".translate").translate();
+
+// If you want to use arguments in your translations, you have to put the translated text directly
+// in your templates as follows:
+$("...").append(... + t('t2', [ 0, 1 ]);
+$("...").append(... + t('t3', [ 0, 1, 2, 3, ... ]);
+         </pre>
+         </div>
+
+         <h3>2.2.4 <a name="en-Plugin-3-4">Information popups in the administration</a></h3>
+        Another great feature of the administration is the information system. You can either inform the user of a success, warn him or report an error. Note that if an AJAX call fails, an error with detailed information will show up automatically.
+
+         <pre class="brush: js;">
+function inform(tag, type, add, params, div);
+
+// Will show up an "success" div on top of the page containing
+// the translation of t2 (e.g., "done 0 / 1" here.
+// true is used to say that you want to add the div (false will remove the div)
+// By default the div show on top of the page but you can specify the container div using the div parameter
+inform('t2', 'success', true, [0, 1]);
+         </pre>
 
         <h2>2.4 <a name="en-Plugin-4">Complete example</a></h2>
 
