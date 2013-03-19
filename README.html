@@ -694,7 +694,7 @@ class Pages_Myplugin_Index {
       );
    }
 
-   /* Tell the gallery to load this file when this plugin is activated */
+   /* Tell the gallery to load a js file when this plugin is activated */
    static public function getUserScripts() {
       return array('./admin/pages/myplugin/scripts/jgallery.myplugin.js');
    }
@@ -719,7 +719,7 @@ var MyPlugin = {
 
    // mandatory, called just before displaying the first page
    init:function(action) {
-      alert("Initialized! Config value is "+config.my_option." !");
+      alert("Initialized! Config value is "+config.my_option+" !");
 
       // Tell the gallery we have completed initialization
       // without this line, the want/handle functions will never be called
@@ -827,7 +827,6 @@ E.g.,
                <li>
                <label for="folder1">myplugin</label> 
                <ol>
-                  <li class="file"><a href="#" onclick="hide('hello-js'); hide('hello-tpl'); return showHide('hello-index');">index.php</a></li>
                   <li>
                      <label for="folder1">scripts</label>
                      <ol>
@@ -873,10 +872,13 @@ known_sentences.concat({
    't1':'Translation 1',
    't2':'{0} done / {1} total',
    't3':function(args) {
-      return 'Translation 3: ' + arg[0];
+      return 'Translation 3: ' + args[0];
    },
 };
-
+         </pre>
+      
+         To translate in the adminstration:
+         <pre class="brush: js;">
 // Elements with a class="translate" will be translated automatically after the page load.
 // However if you add elements later on (e.g., after receiving an AJAX response), you must
 // inform the gallery that it must perform new translations. This can be done in a single line:
@@ -895,8 +897,8 @@ $("...").append(... + t('t3', [ 0, 1, 2, 3, ... ]);
          <pre class="brush: js;">
 function inform(tag, type, add, params, div);
 
-// Will show up an "success" div on top of the page containing
-// the translation of t2 (e.g., "done 0 / 1" here.
+// E.g., the following will show a "success" div on top of the page containing
+// the translation of t2 (e.g., "done 0 / 1" here, click on the "en.js" file in the previous subsection to know why).
 // true is used to say that you want to add the div (false will remove the div)
 // By default the div show on top of the page but you can specify the container div using the div parameter
 inform('t2', 'success', true, [0, 1]);
@@ -904,26 +906,7 @@ inform('t2', 'success', true, [0, 1]);
 
         <h2>2.4 <a name="en-Plugin-4">Complete example</a></h2>
 
-         <ol class="tree">
-            <li>
-            <label for="themes">pages</label> 
-            <ol>
-               <li>
-               <label for="folder1">MyPlugin</label> 
-               <ol>
-                  <li class="file"><a href="#" onclick="hide('index-js'); return showHide('plugin-index');">index.php</a></li>
-                  <li><label for="folder1">css</label></li>
-                  <li><label for="folder1">scripts</label></li>
-                  <ol>
-                     <li><label for="folder1">lang</label> </li>
-                  </ol>
-                  <li><label for="folder1">php</label></li>
-                  <li><label for="folder1">tpl</label></li>
-               </ol>
-               </li>
-            </ol>
-            </li>
-         </ol>
+        Click <a href="">here</a> to download a complete example of a plugin. This plugin adds a tab in the admin and registers a pligin in the gallery. It uses custom classes to handle files and is translated in english and french. In brief, it should contain everything that is required to make a fully functionnal plugin!
 
 
                </div>
