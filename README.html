@@ -367,7 +367,7 @@ function showDirs(json, isGalleryIndex) {
         return;
  
   var dirs = [];
-  var dirUrl = jGalleryModel.pageToUrl(jGallery.currentPage);
+  var dirUrl = jGalleryModel.pageToUrl(data.realurl);
   for (var i in json.dirs) {
       dirs[i] = {
           ID:i,
@@ -400,7 +400,7 @@ function showPics(json) {
     return;
  
   var pics = [];
-  var dirUrl = jGalleryModel.pageToUrl(jGallery.currentPage);
+  var dirUrl = jGalleryModel.pageToUrl(data.realurl);
   for (var i in json.pics) {
     pics[i] = {
       ID:i,
@@ -424,7 +424,7 @@ function showVids(json) {
   if(!json.vids)
     return;
  
-  var dirUrl = jGalleryModel.pageToUrl(jGallery.currentPage);
+  var dirUrl = jGalleryModel.pageToUrl(data.realurl);
   var vids = [];
   for (var i in json.vids) {
     vids[i] = {
