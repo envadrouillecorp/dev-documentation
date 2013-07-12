@@ -11,10 +11,13 @@
             color:black;
             text-align:justify;
          }
-         .menu, h1 {
+         .menu li {
+            list-style:none;
+         }
+         .menu, h1,h2,h3 {
             color:#990000;
          }
-         h1 a {
+         h1 a, h2 a, h3 a {
             color:#000;
          }
          .menu a {
@@ -96,6 +99,7 @@
           return false;
        }
        </script>
+       <script type="text/javascript" src="js/jquery.min.js"></script>
        <script type="text/javascript" src="js/shCore.js"></script>
        <script type="text/javascript" src="js/shBrushJScript.js"></script>
        <script type="text/javascript" src="js/shBrushCss.js"></script>
@@ -109,33 +113,37 @@
 
 
       <div id="en" class="language">
-         <ul class="menu">
-            <li>0. <a href="#en-Gen">General information about EnVadrouille</a></li>
-            <ul>
-              <li>0.1 <a href="#en-Gen-1">Available scripts</a></li>
-              <li>0.2 <a href="#en-Gen-2">Paths, thumbnails, jsons</a></li>
-            </ul>
-            <li>1. <a href="#en-Theme">Create a theme</a></li>
-            <li>1. <a href="#en-Plugin">Create a plugin</a></li>
-            <ul class="menu">
-              <li>2.0 <a href="#en-Plugin-0">Philosophy</a></li>
-              <li>2.1 <a href="#en-Plugin-1">Administration plugin - Hello world</a></li>
-              <li>2.2 <a href="#en-Plugin-2">Gallery plugin - Hello World</a></li>
-              <li>2.3 <a href="#en-Plugin-3">Available classes and hacks</a></li>
-              <ul>
-                  <li>2.2.1 <a href="en-Plugin-3-1">Files manipulation</a></li>
-                  <li>2.2.2 <a href="en-Plugin-3-2">Use multiple JS files in an administration plugin</a></li>
-                  <li>2.2.3 <a href="en-Plugin-3-3">Translation in the administration</a></li>
-                  <li>2.2.4 <a href="en-Plugin-3-4">Information popups in the administration</a></li>
-              </ul>
-              <li>2.4 <a href="#en-Plugin-4">Complete example</a></li>
-            </ul>
-         </ul>
+         <ul id="mainmenu" class="menu"></ul>
+<script>
+$(document).ready(function() {
+   var uid = 0;
+   function showChild(parent, div, rec, hid) {
+      if(rec > 3)
+         return;
 
-         <h1>0. <a name="en-Gen">General information about EnVadrouille</a></h1>
+      var elts;
+      if(parent) 
+         elts = $(parent).nextUntil('h'+(rec-1)).filter('h'+rec);
+      else
+         elts = $(document).find('h'+rec);
+      elts.each(function(id, v) {
+         var text = $(v).text();
+         var num = ((hid)?(hid+'.'):'')+(id+1);
+         var link = uid++;
+         $(v).html(num + ' <a name='+link+'>'+text+'</a>');
+         div.append('<li>'+num+' <a href="#'+link+'">'+text+'</a></li><ul id="h'+rec+'_'+uid+'"></ul>');
+         showChild(v, $('#h'+rec+'_'+uid), rec+1, num);
+      });
+   }
+   showChild(null, $('#mainmenu'), 1, null);
+});
+</script>
+
+
+         <h1>General information about EnVadrouille</h1>
          Here are some general information about EnVadrouille that might be useful to create themes and plugins.
 
-         <h2>0.1 <a name="en-Gen-1">Available scripts</a></h2>
+         <h2>Available scripts</h2>
          In the gallery, you may safely assume that the following API will be automatically loaded:
          <ul>
             <li>jQuery v1.7</li>
@@ -162,7 +170,7 @@ $script.loaded(['foo', 'jquery', 'colorbox'], function() {
 
          <br/>
 
-         <h2>0.2 <a name="en-Gen-2">Paths, thumbnails, jsons</a></h2>
+         <h2>Paths, thumbnails, jsons</h2>
          <table>
            <tr>
              <td valign="top" width="1000px" style="padding-right:20px;text-align:justify">
@@ -182,10 +190,10 @@ $script.loaded(['foo', 'jquery', 'colorbox'], function() {
                        <label for="json">json</label> 
                        <ol>
                           <li>
-                             <li class="file">cache.json <span class="descr">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;json containing the metadata of the index, see just bellow</span></li>
+                             <li class="file">cache.json <span class="descr">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;json containing the metadata of the index, <a href="#" onclick="return showHide('json-div');">click here</a> to see an example (content will appear bellow the list of files)</span></li>
                              <label for="directoryX">directoryX</label> 
                              <ol>
-                              <li class="file">cache.json <span class="descr">json containing the metadata of directoryX, see just bellow</span></li>
+                              <li class="file">cache.json <span class="descr">json containing the metadata of directoryX, <a href="#" onclick="return showHide('json-div');">click here</a> to see an example (content will appear bellow the list of files)</span></li>
                              </ol>
                           </li>
                        </ol>
@@ -236,7 +244,6 @@ $script.loaded(['foo', 'jquery', 'colorbox'], function() {
          </table>
 
 <br/>
-<a name="json-div-a"></a><b>Description of cache.json files:</b>  <a href="#" onclick="return showHide('json-div');">click here</a>
         <div id="json-div" style="display:none;">
           <pre class="brush: js;">
 // See bellow for real examples
@@ -290,7 +297,12 @@ $script.loaded(['foo', 'jquery', 'colorbox'], function() {
          </div>
 
 
-         <h1>1. <a name="en-Theme">Create a theme</a></h1>
+<br/>
+<br/>
+<br/>
+<br/>
+
+         <h1>Create a theme</h1>
          <div style="display:inline-block;text-align:justify;">
            Create a folder in the <i>/themes</i> directory of your EnVadrouille gallery with two files: <i>main.js</i> and <i>main.css</i>. Once these files created, update the administration options to add your theme to the gallery. If you start from an existing theme, creating your own theme might take you less than 5 minutes!<br/>Click on the files bellow to show the minimal content of the css and js files.<br/>
          </div>
@@ -301,8 +313,8 @@ $script.loaded(['foo', 'jquery', 'colorbox'], function() {
                <li>
                  <label for="folder1">mytheme</label> 
                  <ol>
-                   <li class="file"><a href="#" onclick="hide('theme-js'); return showHide('theme-css');">main.css</a></li>
-                   <li class="file"><a href="#" onclick="hide('theme-css'); return showHide('theme-js');">main.js</a></li>
+                   <li class="file"><a href="#" onclick="hide('theme-js'); return showHide('theme-css');">main.css</a> [click or download <a href="code/mytheme/main.css">full file</a>]</li>
+                   <li class="file"><a href="#" onclick="hide('theme-css'); return showHide('theme-js');">main.js</a> [click or download <a href="code/mytheme/main.js">full file</a>]</li>
                   </ol>
                </li>
              </ol>
@@ -341,31 +353,29 @@ body {                      /* mandatory */
    position:relative;
 }
 .gpsadvanced {
-    display:none; /* button to show charts will be
+   display:none; /* button to show charts will be
                    displayed automatically when
                    the gpx has been loaded */
    position:absolute;
-   background:url(elevation.png) repeat-x center;
    bottom:0px;
    left:50%;
-   margin-left:-39px;
-   width:40px;
-   height:40px;
+   margin-left:-60px;
    cursor:pointer;
    display:none;
+}
+.gpsadvanced:before {
+   content:"STATS";
 }
 .gpsbigger {
    display:none;
    position:absolute;
-   background:url(bigger.png) repeat-x center;
    bottom:0px;
    left:50%;
-   margin-left:-1px;
-   width:40px;
-   height:40px;
    cursor:pointer;
 }
-            </pre>
+.gpsbigger:before {
+   content:"BIGGERMAP";
+}            </pre>
 
          </div>
 
@@ -379,7 +389,7 @@ var myTheme = {
     * transition between pages (fadeIn/fadeOut)
     */
    animateContent : false,
-
+ 
    /*
    * Called on all pages, with or without an argument. May be used to display a breadcrumb or anything you want.
    * @json: /!\ the json being displayed or *undefined* when performing a search
@@ -387,20 +397,21 @@ var myTheme = {
    showHeader:function(json) {
       // Simplest code: do nothing.
    },
-
+ 
    /*
    * Called multiple times most pages to display content.
    * @content the content to display (e.g., 'dirs', 'pics', 'vids', 'gpx', ...)
+   * @json the json being displayed
    */
    showContent:function(content, json) {
       switch(content) {
         case 'dirs': return myTheme.showDirs(json);
         case 'pics': return myTheme.showPics(json);
         case 'vids': return myTheme.showVids(json);
-        default: return myTheme.defaultContent(content, json);
+        default: return jGallery.defaultContent(content, json);
       }
    },
-
+ 
    /*
    * Called to display a search result
    * @dataFull: the galleries that match all searched keywords
@@ -418,7 +429,7 @@ var myTheme = {
    showSearchResults:function(data, keywords) {
      if(!data)
        return;
-    
+     
      for (var i in data) {
        var res = {};
        res.ID = data[i].ID;
@@ -426,10 +437,10 @@ var myTheme = {
        res.descr = data[i].descr;
        res.starred = data[i].starred;
        res.completeurl = data[i].url;
-    
+     
        res.title = jGallery.highlightText(data[i].url, keywords);
        res.thumb = data[i].url+'/'+data[i].thumbs[0];
-    
+     
        $("#dirTpl").tmpl(res).appendTo('#search_results');
        $('#dir'+res.ID).click({url:res.url}, function(ev) {
          ev.preventDefault();
@@ -437,7 +448,7 @@ var myTheme = {
        });
      }
    },
-
+ 
    /*
     * Called to display an error.
     * @data: use data.Error to get the error message
@@ -445,18 +456,18 @@ var myTheme = {
    showError:function(data) {
      $("#errorTpl").tmpl(data).appendTo('#content');
    },
-    
+     
    /*
     * Called before displaying the first page and when the user
     * changes the gallery language.
-    * All text in &lt;... class="translate"&gt;&lt;/...&gt; markups will
+    * All text in <... class="translate"></...> markups will
     * be automatically translated for you.
     * @lang: 'en', 'fr', ...
     */
    changeThemeLang:function(lang) {
      if(lang == 'fr') {
        config.tr['Hello'] = 'Salut';
-       // &lt;span class="translate"&gt;Hello&lt;span&gt; will be shown as "Salut" in French
+       // <span class="translate">Hello<span> will be shown as "Salut" in French
      }
    },
 };
@@ -477,9 +488,9 @@ var myTheme = {
    showDirs:function(json) {
        if(!json.dirs)
            return;
-    
+     
      var dirs = [];
-     var dirUrl = jGalleryModel.pageToUrl(data.realurl);
+     var dirUrl = jGalleryModel.pageToUrl(json.realurl);
      for (var i in json.dirs) {
          dirs[i] = {
              ID:i,
@@ -491,9 +502,9 @@ var myTheme = {
          /* you may also want to set .day , .month, .year and .starred  */
          /* you can also specify a .separator (html string) that will show before the directory */
          /* see the dirTpl template in /index.html to get the list of variables used by the template */
-    
+     
          $("#dirTpl").tmpl(dirs[i]).appendTo('#content');
-    
+     
          $('#dir'+dirs[i].ID).css('opacity', 1);
          $('#dir'+dirs[i].ID+' img').css('opacity', 1);
          $('#dir'+dirs[i].ID).click({url:json.dirs[i].url}, function(ev) {
@@ -502,7 +513,7 @@ var myTheme = {
          });
      }
    },
- 
+  
    /*
    * Called to display pictures
    * @json: the json being displayed; pictures are in the json.pics field.
@@ -510,24 +521,24 @@ var myTheme = {
    showPics:function(json) {
      if(!json.pics)
        return;
-    
+     
      var pics = [];
-     var dirUrl = jGalleryModel.pageToUrl(data.realurl);
+     var dirUrl = jGalleryModel.pageToUrl(json.realurl);
      for (var i in json.pics) {
        pics[i] = {
          ID:i,
          url:(json.pics[i].fullpath?json.pics[i].fullpath:dirUrl),
          big:json.pics[i].url,
-         thumb:json.pics[i].url.replace(/\.([^\.]+)$/, "_c.$1"), //pic.jpg -&gt; pic_c.jpg
+         thumb:json.pics[i].url.replace(/\.([^\.]+)$/, "_c.$1"), //pic.jpg -> pic_c.jpg
          original:json.pics[i].original
        };
        $("#picTpl").tmpl(pics[i]).appendTo('#content');
        $('#pic'+i+' img').css('opacity', 1);
      }
-    
+     
      $("a[rel*='gal']").colorbox({slideshow:true, slideshowSpeed:3500, slideshowAuto:false, loop:false, maxWidth:'90%', maxHeight:'90%'});
    },
- 
+  
    /*
    * Called to display videos
    * @json: the json being displayed; videos are in the json.vids field.
@@ -535,8 +546,8 @@ var myTheme = {
    showVids:function(json) {
      if(!json.vids)
        return;
-    
-     var dirUrl = jGalleryModel.pageToUrl(data.realurl);
+     
+     var dirUrl = jGalleryModel.pageToUrl(json.realurl);
      var vids = [];
      for (var i in json.vids) {
        vids[i] = {
@@ -553,25 +564,104 @@ var myTheme = {
  
             </pre>
          </div>
-         <h1>2. <a name="en-Plugin">Create a plugin</a></h1>
-         <h2>2.0 <a name="en-Plugin-0">Philosophy</a></h2>
-         The admininistration is composed of a set of plugins. Each view of the administration (index, option, face recognition, etc.) is a plugin. A plugin usually works as follows:
+
+<br/>
+<br/>
+<br/>
+<br/>
+         <h1>Create a plugin</h1>
+
+         <h2>Denomination</h2>
+         The admininistration is composed of a set of plugins. Each view of the administration (index, option, face recognition, etc.) is a plugin. Some types of files handled by the gallery (e.g., gpx files) are handled by plugins. We call plugins that display a new view <b>"administration plugins"</b> and plugins that handle new type of files <b>"content plugins"</b>. Both type of plugins can export data/functions to the main gallery.<br/>
+
+Plugins can also be used to modify the gallery (vs the administration). In order to do that, a plugin can tell the gallery to load a javascript file before showing up. The JavaScript file might register various hooks in the gallery to extend its functionality. 
+         Creating a plugin can be a simple as creating a directory with a php file. We will also use js and tpl files to make the examples a bit more interesting. 
+
+
+         <h2>Content Plugins</h2>
+         <h3>Philosophy</h3>
+         <h3>Handling .hello files</h3>
+        Creating a plugin to enhance the gallery is very simple. It only requires the creation of 1 php file. For a more complete example, see the gpx plugin that is shipped with the gallery.
+
+         <ol class="tree">
+            <li>
+            <label for="themes">pages</label> 
+            <ol>
+               <li>
+               <label for="folder1">myplugin</label> 
+               <ol>
+                  <li class="file"><a href="#" onclick="hide('gal-js'); return showHide('gal-index');">index.php</a> [click or download <a href="./code/myplugin1/index.php.txt">the file</a>]</li>
+               </ol>
+               </li>
+            </ol>
+            </li>
+         </ol>
+
+         <div id="gal-index" style="display:none">
+            The index.php file mainly does 2 things: it exports a function to the gallery that will alert the user that a gallery contains a .hello file and it writes a field in .json files used by the gallery.
+
+            <pre class="brush: php;">
+/*
+ * Do not forget to activate the plugin in the administration before testing!
+ * Then update a directory that contains a .hello file and go into the gallery. It will show an alert box.
+ */
+class Pages_Myplugin_Index {
+   public static $description = "Plugin";
+   public static $isOptional = true;
+   public static $showOnMenu = false;
+
+   public static $userContentName = "hello";   // The name of what I will show
+                                               // Will call showContent('hello', json) in the gallery
+   public static $userContentDefaultPosition = 1; // the gallery shows elements in this order by default:
+                                                  // galeries, pictures, videos. Insert at position 1 to show 
+                                                  // galeries, hello, pictures and videos.
+
+    /* Export one function to the gallery. 
+    * Note that we could have put the code in a file and used the getUserScript function
+    * to make the gallery load the file (recommended if you have a lot of code to load),
+    *  see 2nd example
+    */
+   static public function getUserFunctions() {
+       return array(
+          'config.contentPlugins["hello"] = function(json) {
+               if(json.hashello) // written by the writeJSON function
+                  alert("There is an hello file in this gallery!");
+           }'
+       );
+   }
+
+   /* Called when the gallery writes a JSON. Add our field. */
+   public static function writeJSON($new_json_content, $old_json) {
+      $json = array();
+
+      $files = $old_json-&gt;masterDirectory-&gt;getFiles();
+      foreach($files as $f) {
+         if($f-&gt;extension == 'hello') {
+            $json['hashello'] = true;
+         }
+      }
+      return $json;
+   }
+};
+            </pre>
+         </div>
+
+         <h3>A more complex example</h3>
+ 
+         <h2>Administration Plugins</h2>
+         <h3>Philosophy</h3>
+         An administration plugin usually works as follows:
          <ul>
             <li>Display a simple HTML template that contains almost nothing</li>
             <li>Use AJAX calls to get data from the server and add these data to the HTML template</li>
          </ul>
 
-         A plugin is composed of mutiple "actions" (functions): the <b>mainAction</b> that displays the template and multiple other <b>fooAction</b> that are called with AJAX. See bellow for a simple <a href="#en-Plugin-1">Hello World</a> plugin to understand how to perform AJAX calls. The gallery provides convenient functions to perform AJAX calls. DO NOT TRY TO PERFORM THEM BY HAND! Indeed, the custom AJAX functions also add security variables to each AJAX calls that are used internally to prevent XSS attacks. If you perform an AJAX call without these variables, your call will be rejected by the gallery.
+         A plugin is composed of multiple "actions" (functions): the <b>mainAction</b> that displays the template and multiple other <b>fooAction</b> that are called with AJAX. See bellow for a simple Hello World plugin to understand how to perform AJAX calls. The gallery provides convenient functions to perform AJAX calls. DO NOT TRY TO PERFORM THEM BY HAND! Indeed, the custom AJAX functions also add security variables to each AJAX calls that are used internally to prevent XSS attacks. If you perform an AJAX call without these variables, your call will be rejected by the gallery.
          
          <br/><br/>
 
-         Plugins can also be used to modify the gallery (vs the administration). In order to do that, a plugin can tell the gallery to load a javascript file before showing up. The JavaScript file might register various hooks in the gallery to extend its functionality. See the <a href="#en-Plugin-3">Gallery plugin</a> section for more details.</a>
-
-
-         <h2>2.1 <a name="en-Plugin-1">Administration Plugin - Hello World</a></h2>
-
-         Creating a plugin can be a simple as creating a directory with a php file. We will also use a js and a tpl file to make the example a bit more interesting. Create these files and update the administration options. An Hello World tab will be added to the administration. Click on the files for more details.
-
+         
+         <h3>Hello world</h3>
          <ol class="tree">
             <li>
             <label for="themes">pages</label> 
@@ -684,112 +774,15 @@ class Pages_Myplugin_Index {
             </pre>
          </div>
 
-        <h2>2.2 <a name="en-Plugin-2">Gallery plugin - Hello World</a></h2>
 
-       Creating a plugin to enhance the gallery is very simple. It only requires the creation of 2 files. Once you have created these two files, go in the administration option and update the options to register you plugin.
+       
 
-         <ol class="tree">
-            <li>
-            <label for="themes">pages</label> 
-            <ol>
-               <li>
-               <label for="folder1">myplugin</label> 
-               <ol>
-                  <li class="file"><a href="#" onclick="hide('gal-js'); return showHide('gal-index');">index.php</a></li>
-                  <li>
-                     <label for="folder1">scripts</label>
-                     <ol>
-                     <li class="file"><a href="#" onclick="hide('gal-index'); return showHide('gal-js');">jgallery.myplugin.js</a></li>
-                     </ol>
-                  </li>
-               </ol>
-               </li>
-            </ol>
-            </li>
-         </ol>
+        <h2>Available classes and hacks</h2>
 
-         <div id="gal-index" style="display:none">
-            The index.php file contains two functions. The <i>getOptions</i> function declares an option value that will be "exported" in the gallery and the <i>getUserScripts</i> function tells the gallery which javascript files to load when the plugin is active.
-
-            <pre class="brush: php;">
-class Pages_Myplugin_Index {
-   public static $description = "Plugin";
-   public static $isOptional = true;
-   public static $showOnMenu = false;
-
-   public static function setupAutoload() {
-   }
-
-   /* We export one variable in the gallery. It will be accessible via config.my_option */
-   static public function getOptions() {
-      return array(
-         array('id' =&gt; 'my_option', 'type' =&gt; 'text', 'cat' =&gt; Pages_Myplugin_Index::$description, 'default' =&gt; 'default value', 'export' =&gt; true),
-      );
-   }
-
-   /* Tell the gallery to load a js file when this plugin is activated */
-   static public function getUserScripts() {
-      return array('./admin/pages/myplugin/scripts/jgallery.myplugin.js');
-   }
-};
-            </pre>
-         </div>
-         <div id="gal-js" style="display:none">
-         The javascript file is also very simple. Your plugin can declare 3 functions that will be used automatically by the gallery. You can also overload functions of the gallery to extend them; see bellow.
-
-            <pre class="brush: js;">
-var MyPlugin = {
-   // called by the gallery on every page change, optionnal
-   want:function(action) {
-      // if the user is on page #myplugin, tell the gallery we handle the rendering
-      return (action == "myplugin");
-   },
-
-   // called on actions you "want", optional if you don't handle any action
-   handle:function(action) {
-      // you told the gallery you wanted an action, now handle it.
-   },
-
-   // mandatory, called just before displaying the first page
-   init:function(action) {
-      alert("Initialized! Config value is "+config.my_option+" !");
-
-      // Tell the gallery we have completed initialization
-      // without this line, the want/handle functions will never be called
-      jGallery.plugins.push(MyPlugin);
-
-
-      // You may also want to overload some functions of the gallery to add extra features, for example, do a:
-      var oldSearch = jGallery.realSearch;
-      jGallery.realSearch = function(txt) {
-         // don't forget to call oldSearch(txt) if you don't want to handle this search!
-      };
-
-      // You can also register triggers to some of the gallery events
-      // Currently only one event is fired: the language change event:
-      $("document").bind("customtranslate", function() {
-         //&lt;span class="translate"&gt;Hello&lt;/span&gt; will show up as "Salut" in french
-         if(lang == "fr") {
-            config.tr["Hello"] = "Salut";
-         } else {
-            delete config.tr["Hello"];
-         }
-      });
-   },
-};
-
-// Tell the gallery to initialize us when all important javascript files have been loaded.
-config.pluginsInstances.push(MyPlugin);
-         </pre>
-        </div>
-
-
-        <h2>2.2 <a name="en-Plugin-3">Available classes and hacks</a></h2>
-
-         <h3>2.2.0 <a name="en-Plugin-3-0">Available classes</a></h3>
+         <h3>Available classes</h3>
 TODO
 
-         <h3>2.2.1 <a name="en-Plugin-3-1">Files manipulation</a></h3>
+         <h3>Files manipulation</h3>
 The main task of the administration is to deal with files (pictures, json) and directories. The gallery provides cool abstractions to ease the most common operations on files and directories. We recommend that you use these abstractions. See <a href="">here</a> for the complete lists of classes that you may use in the gallery.
 
 <br/>
@@ -828,7 +821,7 @@ class Pages_Myplugin_Index {
          </pre>
 
 
-         <h3>2.2.2 <a name="en-Plugin-3-2">Use multiple JS files in an administration plugin</a></h3>
+         <h3>Use multiple JS files in an administration plugin</h3>
          By default the gallery will look for a main.js file in the script directory of your plugin. You may want to inform the gallery that you want to load other js files as follows:
          <pre class="brush: php;">
 class Pages_Myplugin_Index {
@@ -844,7 +837,7 @@ class Pages_Myplugin_Index {
          </pre>
 
          
-         <h3>2.2.3 <a name="en-Plugin-3-3">Translation in the administration</a></h3>
+         <h3>Translation in the administration</h3>
          The gallery will also automatically try to load translation files for your plugins. You need exactly two files for each language: one file that will be used to render the content of your templates and one file that will be used for the description of your plugin options. All text that is in a DOM element with a class "translate" will be translated (that works for inputs and selects too).
 
 <br/>
@@ -924,7 +917,7 @@ $("...").append(... + t('t3', [ 0, 1, 2, 3, ... ]);
          </pre>
          </div>
 
-         <h3>2.2.4 <a name="en-Plugin-3-4">Information popups in the administration</a></h3>
+         <h3>Information popups in the administration</h3>
         Another great feature of the administration is the information system. You can either inform the user of a success, warn him or report an error. Note that if an AJAX call fails, an error with detailed information will show up automatically.
 
          <pre class="brush: js;">
@@ -937,9 +930,9 @@ function inform(tag, type, add, params, div);
 inform('t2', 'success', true, [0, 1]);
          </pre>
 
-        <h2>2.4 <a name="en-Plugin-4">Complete example</a></h2>
+        <h2>Complete examples</h2>
 
-        Click <a href="">here</a> to download a complete example of a plugin. This plugin adds a tab in the admin and registers a pligin in the gallery. It uses custom classes to handle files and is translated in english and french. In brief, it should contain everything that is required to make a fully functionnal plugin!
+        The gpx plugin is a good example of a content plugin. The face plugin is a good example of an administration plugin. Both plugins are shipped with the galery.
 
 
                </div>

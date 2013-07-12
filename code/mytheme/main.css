@@ -1,0 +1,46 @@
+body {                      /* mandatory */
+  background-color:#151515; /* mandatory */
+  color:#FFF;               /* mandatory */
+}
+
+.gps {
+   position:relative;
+}
+.gpscanvas {
+   height:320px;
+}
+.gpscanvasbig {
+   height:800px;
+}
+.gpschart {
+   display:none; /* chart is hidden by default */
+   height:200px;
+   width:100%;
+}
+.gpsmapwrapper {
+   position:relative;
+}
+.gpsadvanced {
+   display:none; /* button to show charts will be
+                   displayed automatically when
+                   the gpx has been loaded */
+   position:absolute;
+   bottom:0px;
+   left:50%;
+   margin-left:-60px;
+   cursor:pointer;
+   display:none;
+}
+.gpsadvanced:before {
+   content:"STATS";
+}
+.gpsbigger {
+   display:none;
+   position:absolute;
+   bottom:0px;
+   left:50%;
+   cursor:pointer;
+}
+.gpsbigger:before {
+   content:"BIGGERMAP";
+}
