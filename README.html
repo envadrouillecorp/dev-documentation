@@ -266,7 +266,7 @@ $script.loaded(['foo', 'jquery', 'colorbox'], function() {
     }                                                                  // /!\ videos with same basename but different
                                                                        // extensions are regrouped!
   ],
-  gpx*:&lt;PATH of the gpx file of the gallery, '' or undefined when no gpx is available&gt;,
+  gpx*:[&lt;PATH of the gpx files of the gallery&gt;] or [],
   gpxtype*:&lt;maps type, "terrain", "satellite" or "roadmap"&gt;
   descr*:&lt;description of the gallery&gt;
 }
@@ -282,7 +282,7 @@ $script.loaded(['foo', 'jquery', 'colorbox'], function() {
   "dirs":[{"ID":0, "url":"subdirectoryX", "thumbs":[], "descr":"subdir descr", starred:false}],
   "pics":[{"url":"picX.jpg", "original":true}],
   "vids":[{"url":["vid.mp4", "vid.ogv"]}, {"url":["vid2.ogv"]}],
-  "gpx":"pics/directoryX/mygpx.gpx",
+  "gpx":["pics/directoryX/mygpx.gpx"],
   "gpxtype":"terrain",
   "descr":"dir descr",
 }
@@ -299,7 +299,7 @@ $script.loaded(['foo', 'jquery', 'colorbox'], function() {
              <label for="themes">themes</label> 
              <ol>
                <li>
-                 <label for="folder1">MyTheme</label> 
+                 <label for="folder1">mytheme</label> 
                  <ol>
                    <li class="file"><a href="#" onclick="hide('theme-js'); return showHide('theme-css');">main.css</a></li>
                    <li class="file"><a href="#" onclick="hide('theme-css'); return showHide('theme-js');">main.js</a></li>
@@ -324,200 +324,233 @@ body {                      /* mandatory */
 
             <pre class="brush: css;">
 .gps {
-	position:relative;
+   position:relative;
 }
 .gpscanvas {
-	height:320px;
+   height:320px;
+}
+.gpscanvasbig {
+   height:800px;
 }
 .gpschart {
-	display:none; /* chart is hidden by default */
-	height:200px;
+   display:none; /* chart is hidden by default */
+   height:200px;
+   width:100%;
+}
+.gpsmapwrapper {
+   position:relative;
 }
 .gpsadvanced {
-  display:none; /* button to show charts will be
+    display:none; /* button to show charts will be
                    displayed automatically when
                    the gpx has been loaded */
-  position:absolute;
-  top:280px;
-  left:50%;
-  cursor:pointer;
+   position:absolute;
+   background:url(elevation.png) repeat-x center;
+   bottom:0px;
+   left:50%;
+   margin-left:-39px;
+   width:40px;
+   height:40px;
+   cursor:pointer;
+   display:none;
 }
-.gpsadvanced:before {
-  content:"Show stats";
+.gpsbigger {
+   display:none;
+   position:absolute;
+   background:url(bigger.png) repeat-x center;
+   bottom:0px;
+   left:50%;
+   margin-left:-1px;
+   width:40px;
+   height:40px;
+   cursor:pointer;
 }
             </pre>
 
          </div>
 
          <div id="theme-js" style="display:none;">
-            A theme must implement 8 JavaScript functions. Most of these functions are called with a <b>json argument described <a href="#json-div-a" onclick="showHide('json-div');">here</a></b>. You can add fields to this json but you must NOT alter existing fields (because they might be used internally or by other themes). The following JS example is sufficient to get a fully functionnal gallery.<br/>Alternativelly you can also copy another theme .js file and reuse it; most of the time only the .css file matters!
+            A theme must implement 6 JavaScript function. Most of these functions are called with a json argument described <a href="#json-div-a" onclick="showHide('json-div');">here</a>. You can add fields to this json but you must NOT alter existing fields (because they might be used internally or by other themes).<br/>The simplest way to create this JavaScript file is to start from an existing theme.
 <br/>
           <pre class="brush: js;">
-/*
- * Boolean to tell whether you want the gallery to perform smooth
- * transition between pages (fadeIn/fadeOut)
- */
-var animateContent = false;
+var myTheme = {
+   /*
+    * Boolean to tell whether you want the gallery to perform smooth
+    * transition between pages (fadeIn/fadeOut)
+    */
+   animateContent : false,
 
-/*
-* Called on all pages, with or without an argument. May be used to display a breadcrumb or anything you want.
-* @json: /!\ the json being displayed or *undefined* when performing a search
-*        see end of Section 0.2 for the description of the json
-*/
-function showHeader(json) {
-   // Simplest code: do nothing.
-}
+   /*
+   * Called on all pages, with or without an argument. May be used to display a breadcrumb or anything you want.
+   * @json: /!\ the json being displayed or *undefined* when performing a search
+   */
+   showHeader:function(json) {
+      // Simplest code: do nothing.
+   },
+
+   /*
+   * Called multiple times most pages to display content.
+   * @content the content to display (e.g., 'dirs', 'pics', 'vids', 'gpx', ...)
+   */
+   showContent:function(content, json) {
+      switch(content) {
+        case 'dirs': return myTheme.showDirs(json);
+        case 'pics': return myTheme.showPics(json);
+        case 'vids': return myTheme.showVids(json);
+        default: return myTheme.defaultContent(content, json);
+      }
+   },
+
+   /*
+   * Called to display a search result
+   * @dataFull: the galleries that match all searched keywords
+   * @dataPartial: the galleries that some of the searched keywords
+   * @keywords: the searched keywords
+   */
+   showSearch:function(dataFull, dataPartial, keywords) {
+     if(dataFull.length) {
+       myTheme.showSearchResults(dataFull, keywords);
+     }
+     if(dataPartial.length) {
+       myTheme.showSearchResults(dataPartial, keywords);
+     }
+   },
+   showSearchResults:function(data, keywords) {
+     if(!data)
+       return;
+    
+     for (var i in data) {
+       var res = {};
+       res.ID = data[i].ID;
+       res.url = data[i].url;
+       res.descr = data[i].descr;
+       res.starred = data[i].starred;
+       res.completeurl = data[i].url;
+    
+       res.title = jGallery.highlightText(data[i].url, keywords);
+       res.thumb = data[i].url+'/'+data[i].thumbs[0];
+    
+       $("#dirTpl").tmpl(res).appendTo('#search_results');
+       $('#dir'+res.ID).click({url:res.url}, function(ev) {
+         ev.preventDefault();
+         jGallery.switchPage(ev.data.url);
+       });
+     }
+   },
+
+   /*
+    * Called to display an error.
+    * @data: use data.Error to get the error message
+    */
+   showError:function(data) {
+     $("#errorTpl").tmpl(data).appendTo('#content');
+   },
+    
+   /*
+    * Called before displaying the first page and when the user
+    * changes the gallery language.
+    * All text in &lt;... class="translate"&gt;&lt;/...&gt; markups will
+    * be automatically translated for you.
+    * @lang: 'en', 'fr', ...
+    */
+   changeThemeLang:function(lang) {
+     if(lang == 'fr') {
+       config.tr['Hello'] = 'Salut';
+       // &lt;span class="translate"&gt;Hello&lt;span&gt; will be shown as "Salut" in French
+     }
+   },
+};
+// your theme must be in /theme/mytheme
+config.loadedThemes['mytheme'] = myTheme;
+          </pre>
+
+You are free to handle (or not to handle) any of the content that is passed as an argument to showContent. A default function is provided for 'gpx' but you should handle the 'dirs', 'pics' and 'vids' contents. Here is an example of functions that you may use to show galleries, pictures and videos:<br/>
+          <pre class="brush: js;">
+var myTheme = {
+
+   // ... functions declared before
+
+   /*
+   * Called to display galleries.
+   * @json: the json being displayed; galleries are in the json.dirs field.
+   */
+   showDirs:function(json) {
+       if(!json.dirs)
+           return;
+    
+     var dirs = [];
+     var dirUrl = jGalleryModel.pageToUrl(data.realurl);
+     for (var i in json.dirs) {
+         dirs[i] = {
+             ID:i,
+             completeurl:json.dirs[i].completeurl || (dirUrl+json.dirs[i].url),
+             thumb:json.dirs[i].thumb || (dirUrl+json.dirs[i].url+'/'+json.dirs[i].thumbs[0]),
+             title:json.dirs[i].title || json.dirs[i].url,
+             descr:json.dirs[i].descr,
+         };
+         /* you may also want to set .day , .month, .year and .starred  */
+         /* you can also specify a .separator (html string) that will show before the directory */
+         /* see the dirTpl template in /index.html to get the list of variables used by the template */
+    
+         $("#dirTpl").tmpl(dirs[i]).appendTo('#content');
+    
+         $('#dir'+dirs[i].ID).css('opacity', 1);
+         $('#dir'+dirs[i].ID+' img').css('opacity', 1);
+         $('#dir'+dirs[i].ID).click({url:json.dirs[i].url}, function(ev) {
+           ev.preventDefault();
+           jGallery.switchPage(dirUrl+ev.data.url);
+         });
+     }
+   },
  
-/*
-* Called to display galleries.
-* @json: the json being displayed; galleries are in the json.dirs field.
-* @isGalleryIndex: true if the displayed page is the main gallery page.
-*/
-function showDirs(json, isGalleryIndex) {
-    if(!json.dirs)
-        return;
+   /*
+   * Called to display pictures
+   * @json: the json being displayed; pictures are in the json.pics field.
+   */
+   showPics:function(json) {
+     if(!json.pics)
+       return;
+    
+     var pics = [];
+     var dirUrl = jGalleryModel.pageToUrl(data.realurl);
+     for (var i in json.pics) {
+       pics[i] = {
+         ID:i,
+         url:(json.pics[i].fullpath?json.pics[i].fullpath:dirUrl),
+         big:json.pics[i].url,
+         thumb:json.pics[i].url.replace(/\.([^\.]+)$/, "_c.$1"), //pic.jpg -&gt; pic_c.jpg
+         original:json.pics[i].original
+       };
+       $("#picTpl").tmpl(pics[i]).appendTo('#content');
+       $('#pic'+i+' img').css('opacity', 1);
+     }
+    
+     $("a[rel*='gal']").colorbox({slideshow:true, slideshowSpeed:3500, slideshowAuto:false, loop:false, maxWidth:'90%', maxHeight:'90%'});
+   },
  
-  var dirs = [];
-  var dirUrl = jGalleryModel.pageToUrl(data.realurl);
-  for (var i in json.dirs) {
-      dirs[i] = {
-          ID:i,
-          completeurl:json.dirs[i].completeurl || (dirUrl+json.dirs[i].url),
-          thumb:json.dirs[i].thumb || (dirUrl+json.dirs[i].url+'/'+json.dirs[i].thumbs[0]),
-          title:json.dirs[i].title || json.dirs[i].url,
-          descr:json.dirs[i].descr,
-      };
-      /* you may also want to set .day , .month, .year and .starred  */
-      /* you can also specify a .separator (html string) that will show before the directory */
-      /* see the dirTpl template in /index.html to get the list of variables used by the template */
+   /*
+   * Called to display videos
+   * @json: the json being displayed; videos are in the json.vids field.
+   */
+   showVids:function(json) {
+     if(!json.vids)
+       return;
+    
+     var dirUrl = jGalleryModel.pageToUrl(data.realurl);
+     var vids = [];
+     for (var i in json.vids) {
+       vids[i] = {
+         ID:i,
+         vid:json.vids[i].url,
+         path:dirUrl,
+         h:360,
+         w:640
+       };
+       $("#vidTpl").tmpl(vids[i]).appendTo('#content');
+     }
+   },
+};
  
-      $("#dirTpl").tmpl(dirs[i]).appendTo('#content');
- 
-      $('#dir'+dirs[i].ID).css('opacity', 1);
-      $('#dir'+dirs[i].ID+' img').css('opacity', 1);
-      $('#dir'+dirs[i].ID).click({url:json.dirs[i].url}, function(ev) {
-        ev.preventDefault();
-        jGallery.switchPage(dirUrl+ev.data.url);
-      });
-  }
-}
- 
-/*
-* Called to display pictures
-* @json: the json being displayed; pictures are in the json.pics field.
-*/
-function showPics(json) {
-  if(!json.pics)
-    return;
- 
-  var pics = [];
-  var dirUrl = jGalleryModel.pageToUrl(data.realurl);
-  for (var i in json.pics) {
-    pics[i] = {
-      ID:i,
-      url:(json.pics[i].fullpath?json.pics[i].fullpath:dirUrl),
-      big:json.pics[i].url,
-      thumb:json.pics[i].url.replace(/\.([^\.]+)$/, "_c.$1"), //pic.jpg -&gt; pic_c.jpg
-      original:json.pics[i].original
-    };
-    $("#picTpl").tmpl(pics[i]).appendTo('#content');
-    $('#pic'+i+' img').css('opacity', 1);
-  }
- 
-  $("a[rel*='gal']").colorbox({slideshow:true, slideshowSpeed:3500, slideshowAuto:false, loop:false, maxWidth:'90%', maxHeight:'90%'});
-}
- 
-/*
-* Called to display videos
-* @json: the json being displayed; videos are in the json.vids field.
-*/
-function showVids(json) {
-  if(!json.vids)
-    return;
- 
-  var dirUrl = jGalleryModel.pageToUrl(data.realurl);
-  var vids = [];
-  for (var i in json.vids) {
-    vids[i] = {
-      ID:i,
-      vid:json.vids[i].url,
-      path:dirUrl,
-      h:360,
-      w:640
-    };
-    $("#vidTpl").tmpl(vids[i]).appendTo('#content');
-  }
-}
- 
-/*
-* Called to display a gpx file
-* @json: the json being displayed; gpx is in the json.gpx field.
-*/
-function showGps(json) {
-  if(json.gpx) {
-    $("#gpsTpl").tmpl().appendTo('#content');
-    jGallery.showGPX(json);
-  }
-}
- 
-/*
-* Called to display a search result
-* @dataFull: the galleries that match all searched keywords
-* @dataPartial: the galleries that some of the searched keywords
-* @keywords: the searched keywords
-*/
-function showSearch(dataFull, dataPartial, keywords) {
-  if(dataFull.length) {
-    showSearchResults(dataFull, keywords);
-  }
-  if(dataPartial.length) {
-    showSearchResults(dataPartial, keywords);
-  }
-}
-function showSearchResults(data, keywords) {
-  if(!data)
-    return;
- 
-  for (var i in data) {
-    var res = {};
-    res.ID = data[i].ID;
-    res.url = data[i].url;
-    res.descr = data[i].descr;
-    res.starred = data[i].starred;
-    res.completeurl = data[i].url;
- 
-    res.title = jGallery.highlightText(data[i].url, keywords);
-    res.thumb = data[i].url+'/'+data[i].thumbs[0];
- 
-    $("#dirTpl").tmpl(res).appendTo('#search_results');
-    $('#dir'+res.ID).click({url:res.url}, function(ev) {
-      ev.preventDefault();
-      jGallery.switchPage(ev.data.url);
-    });
-  }
-}
- 
-/*
- * Called to display an error.
- * @data: use data.Error to get the error message
- */
-function showError(data) {
-  $("#errorTpl").tmpl(data).appendTo('#content');
-}
- 
-/*
- * Called before displaying the first page and when the user
- * changes the gallery language.
- * All text in &lt;... class="translate"&gt;&lt;/...&gt; markups will
- * be automatically translated for you.
- * @lang: 'en', 'fr', ...
- */
-function changeThemeLang(lang) {
-  if(lang == 'fr') {
-    config.tr['Hello'] = 'Salut';
-    // &lt;span class="translate"&gt;Hello&lt;span&gt; will be shown as "Salut" in French
-  }
-}
             </pre>
          </div>
          <h1>2. <a name="en-Plugin">Create a plugin</a></h1>
