@@ -14,10 +14,10 @@
          .menu li {
             list-style:none;
          }
-         .menu, h1,h2,h3 {
+         .menu, h1,h2 {
             color:#990000;
          }
-         h1 a, h2 a, h3 a {
+         h1 a, h2 a, h3, h3 a {
             color:#000;
          }
          .menu a {
@@ -118,7 +118,7 @@
 $(document).ready(function() {
    var uid = 0;
    function showChild(parent, div, rec, hid) {
-      if(rec > 3)
+      if(rec > 2)
          return;
 
       var elts;
@@ -149,8 +149,6 @@ $(document).ready(function() {
             <li>jQuery v1.7</li>
             <li>jQuery template plugin, see <a href="https://github.com/jquery/jquery-tmpl">https://github.com/jquery/jquery-tmpl</a></li>
             <li>jQuery color animation plugin (you can animate background-color, using jQuery animate)</li>
-            <li>jQuery url plugin (you can use $.url)</li>
-            <li>jQuery cookie plugin (you can use $.cookie)</li>
             <li>jQuery doTimeout plugin, see <a href="http://benalman.com/projects/jquery-dotimeout-plugin/">http://benalman.com/projects/jquery-dotimeout-plugin/</a></li>
             <li>jQuery ColorBox v1.3.34 (slideshow plugin), see <a href="http://www.jacklmoore.com/colorbox">http://www.jacklmoore.com/colorbox</a></li>
             <li>A custom script loader named $script, see below.</li>
@@ -217,7 +215,6 @@ $script.loaded(['foo', 'jquery', 'colorbox'], function() {
                         <li>
                            <label for="admin">directoryX</label> 
                            <ol>
-                            <label for="admin">subdirectoryX</label> 
                             <li class="file">mygpx.gpx</li>
                             <li class="file">picX.jpg</li>
                             <li class="file">vid.ogv</li>
@@ -246,7 +243,24 @@ $script.loaded(['foo', 'jquery', 'colorbox'], function() {
 <br/>
         <div id="json-div" style="display:none;">
           <pre class="brush: js;">
-// See bellow for real examples
+// See bellow for the description of the fields
+
+//    /cache/json/cache.json, the cache.json of the index of the gallery:
+{
+  "dirs":[{"ID":0, "url":"directoryX", "thumbs":['picX_m.jpg'], "descr":"dir descr", starred:false}],
+}
+
+//    /cache/json/directoryX/cache.json, the cache.json of directoryX:
+{
+  "dirs":[],
+  "pics":[{"url":"picX.jpg", "original":true}],
+  "vids":[{"url":["vid.mp4", "vid.ogv"]}, {"url":["vid2.ogv"]}],
+  "gpx":["pics/directoryX/mygpx.gpx"],
+  "gpxtype":"terrain",
+  "descr":"dir descr",
+}
+
+// Format description
 // All variables named foo* may be undefined
 {
   dirs*:[                                                              // list of subdirectories
@@ -274,25 +288,10 @@ $script.loaded(['foo', 'jquery', 'colorbox'], function() {
                                                                        // extensions are regrouped!
   ],
   gpx*:[&lt;PATH of the gpx files of the gallery&gt;] or [],
-  gpxtype*:&lt;maps type, "terrain", "satellite" or "roadmap"&gt;
+  gpxtype*:&lt;map type, e.g., "terrain", "satellite" or "roadmap"&gt;
   descr*:&lt;description of the gallery&gt;
 }
 
-//E.g., for the files presented before
-//    /cache/json/cache.json, the cache.json of the index of the gallery:
-{
-  "dirs":[{"ID":0, "url":"directoryX", "thumbs":['picX_m.jpg'], "descr":"dir descr", starred:false}],
-}
-
-//    /cache/json/directoryX/cache.json, the cache.json of directoryX:
-{
-  "dirs":[{"ID":0, "url":"subdirectoryX", "thumbs":[], "descr":"subdir descr", starred:false}],
-  "pics":[{"url":"picX.jpg", "original":true}],
-  "vids":[{"url":["vid.mp4", "vid.ogv"]}, {"url":["vid2.ogv"]}],
-  "gpx":["pics/directoryX/mygpx.gpx"],
-  "gpxtype":"terrain",
-  "descr":"dir descr",
-}
               </pre>
          </div>
 
@@ -304,7 +303,15 @@ $script.loaded(['foo', 'jquery', 'colorbox'], function() {
 
          <h1>Create a theme</h1>
          <div style="display:inline-block;text-align:justify;">
-           Create a folder in the <i>/themes</i> directory of your EnVadrouille gallery with two files: <i>main.js</i> and <i>main.css</i>. Once these files created, update the administration options to add your theme to the gallery. If you start from an existing theme, creating your own theme might take you less than 5 minutes!<br/>Click on the files bellow to show the minimal content of the css and js files.<br/>
+         If you start from an existing theme, creating your own theme might take you less than 5 minutes!<br/>
+         <ul>
+            <li>Create a folder in the <i>/themes</i> directory of your EnVadrouille gallery with two files: <i>main.js</i> and <i>main.css</i>.</li>
+            <li>Once you have created these files with their minimal content (see bellow), update the administration options to add your theme to the gallery.</li>
+            <li>Go in the gallery and enjoy. If you want to update your theme, simply edit the .css and .js files (no need to go in the administration).
+         </ul>
+         
+         Click on the files bellow to show the <b>minimal content</b> of the css and js files.<br/>
+
          </div>
          <ol class="tree">
            <li>
@@ -572,16 +579,24 @@ var myTheme = {
          <h1>Create a plugin</h1>
 
          <h2>Denomination</h2>
-         The admininistration is composed of a set of plugins. Each view of the administration (index, option, face recognition, etc.) is a plugin. Some types of files handled by the gallery (e.g., gpx files) are handled by plugins. We call plugins that display a new view <b>"administration plugins"</b> and plugins that handle new type of files <b>"content plugins"</b>. Both type of plugins can export data/functions to the main gallery.<br/>
-
-Plugins can also be used to modify the gallery (vs the administration). In order to do that, a plugin can tell the gallery to load a javascript file before showing up. The JavaScript file might register various hooks in the gallery to extend its functionality. 
-         Creating a plugin can be a simple as creating a directory with a php file. We will also use js and tpl files to make the examples a bit more interesting. 
-
+         The admininistration is composed of a set of plugins. Each view of the administration (index, option, face recognition, etc.) is a plugin. Some views in the gallery (e.g., face search) are also plugins. Some types of files that are handled by the gallery (e.g., gpx files) are also handled by plugins. We call plugins that display a new view <b>"view plugins"</b> and plugins that handle new type of files <b>"content plugins"</b>. Both type of plugins can export data/functions to the main gallery.<br/>
+         Note: a plugin can be both a view and a content plugin at the same time, if you want to do real complex things.
 
          <h2>Content Plugins</h2>
          <h3>Philosophy</h3>
+         Content plugins are used to handle content that the gallery does not know how to handle by itself, e.g., new type of files. A content plugin can add information in the main administration page (e.g., the gpx chooser is part of a content plugin) and in the jsons generated by the gallery. It can also add javascript in the main gallery to display the new content to the user (e.g., show a map).<br/>
+         The gallery works as follow: when displaying a gallery, for each registered content plugin, it checks if the theme can show the content and then, if the theme does not know how to show the content, it calls the plugin's default function.<br/>
+         <b>A content plugin should only be used to handle new contents that are displayed in the galleries. To create new views (e.g., face search), you should use a view plugin.</b>
+
          <h3>Handling .hello files</h3>
         Creating a plugin to enhance the gallery is very simple. It only requires the creation of 1 php file. For a more complete example, see the gpx plugin that is shipped with the gallery.
+
+         <ul>
+            <li>Create the index file with the content described bellow.</li>
+            <li>Activate myplugin in the administration options (you need to do that only once)</li>
+            <li>Create a gallery with a .hello file in it and update the gallery in the main page of the administration.</li>
+            <li>Go in the gallery. It should show a popup saying the gallery contains a .hello file</li>
+         </ul>
 
          <ol class="tree">
             <li>
@@ -590,14 +605,14 @@ Plugins can also be used to modify the gallery (vs the administration). In order
                <li>
                <label for="folder1">myplugin</label> 
                <ol>
-                  <li class="file"><a href="#" onclick="hide('gal-js'); return showHide('gal-index');">index.php</a> [click or download <a href="./code/myplugin1/index.php.txt">the file</a>]</li>
+                  <li class="file"><a href="#" onclick="hide('content-index'); return showHide('content-index');">index.php</a> [click or download <a href="./code/myplugin1/index.php.txt">the file</a>]</li>
                </ol>
                </li>
             </ol>
             </li>
          </ol>
 
-         <div id="gal-index" style="display:none">
+         <div id="content-index" style="display:none">
             The index.php file mainly does 2 things: it exports a function to the gallery that will alert the user that a gallery contains a .hello file and it writes a field in .json files used by the gallery.
 
             <pre class="brush: php;">
@@ -647,21 +662,20 @@ class Pages_Myplugin_Index {
          </div>
 
          <h3>A more complex example</h3>
+         In this example, we show how to show new content in the main administration page. Showing content in the main administration page requires a template and a javascript file to fill the template. We start from the .hello plugin described bellow.
  
-         <h2>Administration Plugins</h2>
+         <h2>View Plugins</h2>
          <h3>Philosophy</h3>
-         An administration plugin usually works as follows:
+         A view plugin is used to 
          <ul>
-            <li>Display a simple HTML template that contains almost nothing</li>
-            <li>Use AJAX calls to get data from the server and add these data to the HTML template</li>
+            <li>Display a new page in the administration (e.g., options).</li>
+            <li>Display a new page in the gallery (e.g., face search).</li>
          </ul>
 
-         A plugin is composed of multiple "actions" (functions): the <b>mainAction</b> that displays the template and multiple other <b>fooAction</b> that are called with AJAX. See bellow for a simple Hello World plugin to understand how to perform AJAX calls. The gallery provides convenient functions to perform AJAX calls. DO NOT TRY TO PERFORM THEM BY HAND! Indeed, the custom AJAX functions also add security variables to each AJAX calls that are used internally to prevent XSS attacks. If you perform an AJAX call without these variables, your call will be rejected by the gallery.
          
-         <br/><br/>
+         <h3>Views in the administration - Hello world</h3>
+         An administration plugin is composed of multiple "actions" (functions): the <b>mainAction</b> that displays the template and multiple other <b>fooAction</b> that are called asynchronously (via AJAX calls). See bellow for a simple Hello World plugin to understand how to perform AJAX calls. The gallery provides convenient functions to perform AJAX calls. <b>DO NOT TRY TO PERFORM AJAX CALLS BY HAND!</b> Indeed, the gallery needs security variables in each AJAX calls that are used internally to prevent XSS attacks. If you perform an AJAX call without these variables, your call will be rejected by the gallery. So, stick with the galleries AJAX functions or make sure to add the security variables to your calls!
 
-         
-         <h3>Hello world</h3>
          <ol class="tree">
             <li>
             <label for="themes">pages</label> 
@@ -777,13 +791,20 @@ class Pages_Myplugin_Index {
 
        
 
-        <h2>Available classes and hacks</h2>
+        <h2>PHP - Available classes and hacks</h2>
 
          <h3>Available classes</h3>
-TODO
+         In the administration, you can use the following PHP classes:<br/>
+         <img src="php.svg" type="image/svg+xml" style="max-width:100%" />
+
+         <br/><br/>In the gallery, you can use the following JS classes:</br>
+         <img src="js.svg" type="image/svg+xml" style="max-width:100%" />
+
+
+
 
          <h3>Files manipulation</h3>
-The main task of the administration is to deal with files (pictures, json) and directories. The gallery provides cool abstractions to ease the most common operations on files and directories. We recommend that you use these abstractions. See <a href="">here</a> for the complete lists of classes that you may use in the gallery.
+The main task of the administration is to deal with files (pictures, json) and directories. The gallery provides cool abstractions to ease the most common operations on files and directories. We recommend that you use these abstractions. See <a href="php.svg">here</a> for the complete lists of classes that you may use in the gallery.
 
 <br/>
 If these classes do not meet your needs, you can extend them and make the gallery use your own abstractions instead of the generic ones. For example, without any modifications, all png files are of type File_Pic. If you want all png files to be of type MyPic, here is how to do it:
@@ -830,7 +851,7 @@ class Pages_Myplugin_Index {
    static public function mainAction() {
       $template = new liteTemplate();
       $template-&gt;extraJS[] = './pages/myplugin/scripts/extrajs.js';
-      $template-&gt;showPage('index');
+      $template-&gt;showPage('index'); //uses extraJS
       $template-&gt;view();
    }
 }
@@ -932,8 +953,7 @@ inform('t2', 'success', true, [0, 1]);
 
         <h2>Complete examples</h2>
 
-        The gpx plugin is a good example of a content plugin. The face plugin is a good example of an administration plugin. Both plugins are shipped with the galery.
-
+        The gpx plugin is a good example of a content plugin. The face plugin is a good example of a view plugin. Both plugins are shipped with the gallery.
 
                </div>
       <script type="text/javascript">

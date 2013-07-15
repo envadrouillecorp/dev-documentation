@@ -17,7 +17,7 @@
    viewBox="0 0 450.55723 154.28071"
    id="svg2"
    version="1.1"
-   inkscape:version="0.47 r22583"
+   inkscape:version="0.48.1 r9760"
    sodipodi:docname="js.svg">
   <metadata
      id="metadata374">
@@ -154,15 +154,15 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1321"
+     inkscape:window-width="1072"
      inkscape:window-height="724"
      id="namedview370"
      showgrid="false"
      inkscape:zoom="0.92662577"
      inkscape:cx="529.82147"
      inkscape:cy="154.25903"
-     inkscape:window-x="45"
-     inkscape:window-y="0"
+     inkscape:window-x="1289"
+     inkscape:window-y="256"
      inkscape:window-maximized="0"
      inkscape:current-layer="node4" />
   <g
@@ -182,61 +182,56 @@
          id="title63">node4</title>
       <polygon
          style="fill:none;stroke:#000000"
-         points="754,-654 754,-654 754,-967 934,-967 934,-654 "
+         points="934,-654 754,-654 754,-654 754,-967 934,-967 "
          id="polygon65"
-         transform="matrix(1.0543201,0,0,0.49061185,-41.097729,-492.71873)" />
+         transform="matrix(1.0543201,0,0,0.46221027,-41.097729,-516.98305)" />
       <text
          x="844"
-         y="-949.90002"
+         y="-946.70007"
          style="font-size:14px;text-anchor:middle;font-family:Times New Roman"
          id="text67">jGallery</text>
       <polyline
          style="fill:none;stroke:#000000"
          points="754,-942 934,-942 "
          id="polyline69"
-         transform="matrix(1.0429289,0,0,1,-32.34691,0)" />
+         transform="matrix(1.0429289,0,0,1,-32.34691,3.2)" />
       <text
          x="759.40997"
-         y="-926.76868"
+         y="-923.56873"
          style="font-size:14px;text-anchor:start;font-family:Times New Roman"
          id="text85">+ switchLang( lang ) :</text>
       <text
          x="759.40997"
-         y="-909.76868"
+         y="-906.56873"
          style="font-size:14px;text-anchor:start;font-family:Times New Roman"
          id="text87">+ switchTheme( theme, fg, bg) :</text>
       <text
          x="759.40997"
-         y="-892.76868"
-         style="font-size:14px;text-anchor:start;font-family:Times New Roman"
-         id="text89">+ showGPX( json ) :</text>
-      <text
-         x="759.40997"
-         y="-875.76868"
+         y="-893.36841"
          style="font-size:14px;text-anchor:start;font-family:Times New Roman"
          id="text91">+ search( txt ) :</text>
       <text
          x="759.40997"
-         y="-858.76868"
+         y="-876.36841"
          style="font-size:14px;text-anchor:start;font-family:Times New Roman"
          id="text93">+ realSearch( txt ) :</text>
       <text
          x="759.40997"
-         y="-841.76868"
+         y="-859.36841"
          style="font-size:14px;text-anchor:start;font-family:Times New Roman"
          id="text95">+ highlightText( html ) : html</text>
       <text
          x="759.40997"
-         y="-824.76868"
+         y="-842.36841"
          style="font-size:14px;text-anchor:start;font-family:Times New Roman"
          id="text97">+ switchPage( action ) :</text>
       <text
          x="844"
-         y="-661.90002"
+         y="-668.29993"
          style="font-size:14px;text-anchor:middle;font-family:Times New Roman"
          id="text103" />
       <g
-         transform="translate(-260.06044,9.8601598)"
+         transform="translate(-260.06044,3.4601598)"
          class="graph"
          id="graph0-2">
         <title
@@ -253,7 +248,7 @@
           <polygon
              transform="matrix(1.2894335,0,0,0.38309054,-218.38139,-596.70002)"
              id="polygon65-7"
-             points="754,-967 934,-967 934,-654 754,-654 754,-654 "
+             points="754,-654 754,-967 934,-967 934,-654 754,-654 "
              style="fill:none;stroke:#000000" />
           <text
              id="text67-9"
@@ -302,6 +297,11 @@
         <!-- node8 -->
         <!-- node9 -->
       </g>
+      <text
+         x="759.74878"
+         y="-825.76636"
+         style="font-size:14px;text-anchor:start;font-family:Times New Roman"
+         id="text97-1">+ defaultContent( content, json) :</text>
     </g>
     <!-- node5 -->
     <!-- node6 -->
