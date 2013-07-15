@@ -60,13 +60,13 @@
      inkscape:window-height="1125"
      id="namedview1527"
      showgrid="false"
-     inkscape:zoom="0.64"
-     inkscape:cx="803.38436"
-     inkscape:cy="1945.1282"
+     inkscape:zoom="0.45254834"
+     inkscape:cx="1925.956"
+     inkscape:cy="994.80165"
      inkscape:window-x="1080"
      inkscape:window-y="25"
      inkscape:window-maximized="1"
-     inkscape:current-layer="edge38"
+     inkscape:current-layer="node32"
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
@@ -119,19 +119,9 @@
          id="text26">+ getMovies(limit) : array of File</text>
       <text
          x="403.5"
-         y="-766.40002"
-         style="font-size:14px;text-anchor:start;stroke-width:0.79999995;stroke-miterlimit:4;stroke-dasharray:none;font-family:Times New Roman"
-         id="text28">+ getGPXs(limit) : array of File</text>
-      <text
-         x="403.5"
-         y="-749.40002"
+         y="-768.59973"
          style="font-size:14px;text-anchor:start;stroke-width:0.79999995;stroke-miterlimit:4;stroke-dasharray:none;font-family:Times New Roman"
          id="text30">+ getJSONs(limit) : array of File</text>
-      <text
-         x="403.5"
-         y="-732.40002"
-         style="font-size:14px;text-anchor:start;stroke-width:0.79999995;stroke-miterlimit:4;stroke-dasharray:none;font-family:Times New Roman"
-         id="text32">+ remove( ) :</text>
       <text
          x="514"
          y="-706.90002"
@@ -593,7 +583,7 @@
          x="1040.088"
          y="-825.38837"
          style="font-size:14px;text-anchor:start;stroke-width:0.79999995;stroke-miterlimit:4;stroke-dasharray:none;font-family:Times New Roman"
-         id="text379">+ get() : array of arrays or strings</text>
+         id="text379">+ get() :php representation of the json</text>
       <text
          x="1040.088"
          y="-808.38837"
@@ -1201,7 +1191,7 @@
          x="1339.5"
          y="-349.39999"
          style="font-size:14px;text-anchor:start;stroke-width:0.79999995;stroke-miterlimit:4;stroke-dasharray:none;font-family:Times New Roman"
-         id="text1026">+ basepic; IndexPic</text>
+         id="text1026">+ basepic: IndexPic</text>
     </g>
     <!-- node43 -->
     <g
