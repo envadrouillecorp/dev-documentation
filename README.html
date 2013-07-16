@@ -65,10 +65,10 @@
          }
          ol.tree li label
          {
-           background: url(css/folder-horizontal.png) 15px 7px no-repeat;
+           background: url(css/folder-horizontal.png) 0px 7px no-repeat;
            cursor: pointer;
            display: block;
-           padding-left: 37px;
+           padding-left: 27px;
            position:relative;
          }
          ol.tree .descr {
@@ -406,7 +406,7 @@ var myTheme = {
    },
  
    /*
-   * Called multiple times most pages to display content.
+   * Called multiple times on most pages to display content.
    * @content the content to display (e.g., 'dirs', 'pics', 'vids', 'gpx', ...)
    * @json the json being displayed
    */
@@ -467,14 +467,14 @@ var myTheme = {
    /*
     * Called before displaying the first page and when the user
     * changes the gallery language.
-    * All text in <... class="translate"></...> markups will
+    * All text in &lt;... class="translate"&gt;&lt;/...&gt; markups will
     * be automatically translated for you.
     * @lang: 'en', 'fr', ...
     */
    changeThemeLang:function(lang) {
      if(lang == 'fr') {
        config.tr['Hello'] = 'Salut';
-       // <span class="translate">Hello<span> will be shown as "Salut" in French
+       // &lt;span class="translate"&gt;Hello&lt;/span&gt; will be shown as "Salut" in French
      }
    },
 };
@@ -662,8 +662,98 @@ class Pages_Myplugin_Index {
          </div>
 
          <h3>A more complex example</h3>
-         In this example, we show how to show new content in the main administration page. Showing content in the main administration page requires a template and a javascript file to fill the template. We start from the .hello plugin described bellow.
- 
+         In this example, we show how to show new content in the main administration page (e.g., a textbox that will appear in each directory "update box"). Showing content in the main administration page requires a template and a javascript file to fill the template. We start from the .hello plugin described bellow.
+
+         <ol class="tree">
+            <li>
+            <label for="themes">pages</label> 
+            <ol>
+               <li>
+               <label for="folder1">myplugin</label> 
+               <ol>
+                  <li class="file"><a href="#" onclick="hide('content2-index'); return showHide('content2-index');">index.php</a> [click or download <a href="./code/myplugin2/index.php.txt">the file</a>]</li>
+                  <label for="folder1">scripts</label> 
+                  <ol>
+                     <li class="file"><a href="#" onclick="hide('content2-js'); return showHide('content2-js');">index.myplugin.js</a> [click or download <a href="./code/myplugin2/scripts/index.myplugin.js">the file</a>]</li>
+                     <label for="folder1">lang</label> 
+                     <ol>
+                        <li class="file"><a href="#" onclick="hide('content2-js'); return showHide('content2-js');">index_en.js</a> [click or download <a href="./code/myplugin2/scripts/lang/index_en.js">the file</a>]</li>
+                      </ol>
+                   </ol>
+                  <label for="folder1">tpl</label> 
+                  <ol>
+                     <li class="file"><a href="#" onclick="hide('content2-tpl'); return showHide('content2-tpl');">filechooser.tpl</a> [click or download <a href="./code/myplugin2/tpl/filechooser.tpl">the file</a>]</li>
+                   </ol>
+               </ol>
+               </li>
+            </ol>
+            </li>
+         </ol>
+
+
+         <div id="content2-index" style="display:none">
+            Compared to the previous example, the index also exports a template to the main administration page.
+
+            <pre class="brush: php;">
+/*
+ * Do not forget to activate the plugin in the administration before testing!
+ */
+class Pages_Myplugin_Index {
+   public static $description = "Plugin";
+   public static $isOptional = true;
+   public static $showOnMenu = false;
+   public static $userContentName = "hello";   
+   public static $userContentDefaultPosition = 1; 
+
+   /*
+    * We export a tpl file in the main administration page.
+    * The tpl will be filled by the index.myplugin.js file.
+    */
+   static public function getTpl() {
+      $template = new liteTemplate();
+      $template-&gt;file('pages/myplugin/tpl/filechooser.tpl');
+      return $template-&gt;returnTpl();
+   }
+
+   static public function getUserFunctions() {
+       return array(
+          'config.contentPlugins["hello"] = function(json) {
+               if(json.hashello) // written by the writeJSON function
+                  alert("There is an hello file in this gallery!");
+           }'
+       );
+   }
+
+   public static function writeJSON($new_json_content, $old_json) {
+      $json = array();
+
+      $files = $old_json-&gt;masterDirectory-&gt;getFiles();
+      foreach($files as $f) {
+         if($f-&gt;extension == 'hello') {
+            $json['hashello'] = true;
+         }
+      }
+      return $json;
+   }
+};
+            </pre>
+         </div>
+
+         <div id="content2-tpl" style="display:none">
+            The template must be enclose in tr markups.
+
+            <pre class="brush: php;">
+&lt;script id="myplugTpl" type="text/x-jquery-tmpl"&gt;
+   &lt;tr style="height:40px"&gt;
+      &lt;td class="translate"&gt;myplu&lt;/td&gt;
+      &lt;td width="100%"&gt;
+        &lt;input type="text" id='plug_${id}' type="input" value="${hello}" /&gt;
+      &lt;/td&gt;
+   &lt;/tr&gt;
+&lt;/script&gt;
+            </pre>
+         </div>
+
          <h2>View Plugins</h2>
          <h3>Philosophy</h3>
          A view plugin is used to 
