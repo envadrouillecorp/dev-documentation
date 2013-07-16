@@ -619,6 +619,7 @@ var myTheme = {
 /*
  * Do not forget to activate the plugin in the administration before testing!
  * Then update a directory that contains a .hello file and go into the gallery. It will show an alert box.
+ * WARNING: the name of the class is important! Make sure that if your plugin is in pages/myplugin/, then the class is named Pages_Myplugin_Index!
  */
 class Pages_Myplugin_Index {
    public static $description = "Plugin";
@@ -697,6 +698,7 @@ class Pages_Myplugin_Index {
             <pre class="brush: php;">
 /*
  * Do not forget to activate the plugin in the administration before testing!
+ * WARNING: the name of the class is important! Make sure that if your plugin is in pages/myplugin/, then the class is named Pages_Myplugin_Index!
  */
 class Pages_Myplugin_Index {
    public static $description = "Plugin";
@@ -764,7 +766,7 @@ class Pages_Myplugin_Index {
 
          
          <h3>Views in the administration - Hello world</h3>
-         An administration plugin is composed of multiple "actions" (functions): the <b>mainAction</b> that displays the template and multiple other <b>fooAction</b> that are called asynchronously (via AJAX calls). See bellow for a simple Hello World plugin to understand how to perform AJAX calls. The gallery provides convenient functions to perform AJAX calls. <b>DO NOT TRY TO PERFORM AJAX CALLS BY HAND!</b> Indeed, the gallery needs security variables in each AJAX calls that are used internally to prevent XSS attacks. If you perform an AJAX call without these variables, your call will be rejected by the gallery. So, stick with the galleries AJAX functions or make sure to add the security variables to your calls!
+         A view plugin is composed of multiple "actions" (functions): the <b>mainAction</b> that displays the template and multiple other <b>fooAction</b> that are called asynchronously (via AJAX calls). See bellow for a simple Hello World plugin to understand how to perform AJAX calls. The gallery provides convenient functions to perform AJAX calls. <b>DO NOT TRY TO PERFORM AJAX CALLS BY HAND!</b> Indeed, the gallery needs security variables in each AJAX calls that are used internally to prevent XSS attacks. If you perform an AJAX call without these variables, your call will be rejected by the gallery. So, stick with the galleries AJAX functions or make sure to add the security variables to your calls!
 
          <ol class="tree">
             <li>
@@ -835,7 +837,7 @@ $(document).ready(function() {
          <div id="hello-index" style="display:none">
             A plugin must contain an index.php file at its root. Here is a minimal php file that loads a template with a link that that performs an AJAX call.
             <pre class="brush: php;">
-/* index.php MUST contain a Page_PluginName_Index class, here: */
+ /* WARNING: the name of the class is important! Make sure that if your plugin is in pages/myplugin/, then the class is named Pages_Myplugin_Index! */
 class Pages_Myplugin_Index {
    /* Description that will show up in the top menu and in the options; keep it short */
    public static $description = "Hello World";
@@ -848,14 +850,13 @@ class Pages_Myplugin_Index {
 
    /* 
     * Function called before calling any of the plugin action
-    * See the complete plugin example for example usage
     */
    public static function setupAutoload() {
    }
 
    /* 
     * Function called by the administration options plugin
-    * See the complete plugin example for example usage; currently we have no option.
+    * We have no option (see gpx plugin for an example of options)
     */
    static public function getOptions() {
       return array();
@@ -879,7 +880,85 @@ class Pages_Myplugin_Index {
          </div>
 
 
-       
+         <h3>Views in the gallery - Hello world</h3>
+         This plugin will create a new view in the administration, that can be accessed via /yourgallery/#!myplugin. Note that if you want to do more complex things, you can overload the jGallery functions to put hooks where you want.<br/>
+
+         <ol class="tree">
+            <li>
+            <label for="themes">pages</label> 
+            <ol>
+               <li>
+               <label for="folder1">myplugin</label> 
+               <ol>
+                  <li class="file"><a href="#" onclick="hide('view-js'); return showHide('view-index');">index.php</a></li>
+                  <li>
+                     <label for="folder1">scripts</label>
+                     <ol>
+                     <li class="file"><a href="#" onclick="hide('view-index');return showHide('view-js');">jgallery.myplugin.js</a></li>
+                     </ol>
+                  </li>
+               </ol>
+               </li>
+            </ol>
+            </li>
+         </ol>
+
+
+
+         <div id="view-index" style="display:none">
+            A plugin must contain an index.php file at its root. Here is a minimal php file that exports a js in the gallery.
+
+            <pre class="brush: php;">
+ /* WARNING: the name of the class is important! Make sure that if your plugin is in pages/myplugin/, then the class is named Pages_Myplugin_Index! */
+class Pages_Myplugin_Index {
+   public static $description = "Hello World";
+   public static $isOptional = true;
+   public static $showOnMenu = false; // do not show up in the administration
+
+   /* 
+    * Function called by the administration options plugin
+    * We have no option (see gpx plugin for an example of options)
+    */
+   static public function getOptions() {
+      return array();
+   }
+
+   /*
+    * When the plugin is activated, the following file(s) will be loaded in the gallery
+    */
+   static public function getUserScripts() {
+      return array('./admin/pages/myplugin/scripts/jgallery.myplugin.js');
+   }
+}; 
+            </pre>
+         </div>
+
+
+
+<div id="view-js" style="display:none;"><pre class="brush: js;">
+/*
+ * jgallery.myplugin.js
+ */
+var MyPlugin = {
+   // Called on each page change. 
+   // Ask the plugin if it wants to handle the current page
+   want:function(action) {
+      return action == "myplugin"; // only handle #!myplugin
+   }
+
+   // we said we wanted the page, now let's handle it!
+   handle:function(action) {
+      alert("Your are on page "+action); 
+   },
+
+   // do various initialization routines and register the plugin
+   init:function() {
+      jGallery.plugins.push(MyPlugin);
+   }
+};
+// inform the gallery that the file is loaded
+config.pluginsInstances.push(FacePlugin);
+</pre></div>
 
         <h2>PHP - Available classes and hacks</h2>
 
@@ -932,7 +1011,7 @@ class Pages_Myplugin_Index {
          </pre>
 
 
-         <h3>Use multiple JS files in an administration plugin</h3>
+         <h3>Use multiple JS files in a view plugin</h3>
          By default the gallery will look for a main.js file in the script directory of your plugin. You may want to inform the gallery that you want to load other js files as follows:
          <pre class="brush: php;">
 class Pages_Myplugin_Index {

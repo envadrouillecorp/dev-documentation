@@ -3,6 +3,7 @@
 /*
  * Do not forget to activate the plugin in the administration before testing!
  * Then update a directory that contains a .hello file and go into the gallery. It will show an alert box.
+ * WARNING: the name of the class is important! Make sure that if your plugin is in pages/myplugin/, then the class is named Pages_Myplugin_Index! 
  */
 class Pages_Myplugin_Index {
    public static $description = "Plugin";
