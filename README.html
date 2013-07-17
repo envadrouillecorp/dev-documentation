@@ -84,9 +84,10 @@
          }
 
          .hidden {
-            display:none;
+            //display:none;
          }
        </style>
+       <script type="text/javascript" src="js/jquery.min.js"></script>
        <script type="text/javascript">
        function hide(div) {
           var d = document.getElementById(div);
@@ -129,7 +130,6 @@
          buildMenu(null, $('#mainmenu'), 1, null);
        });
        </script>
-       <script type="text/javascript" src="js/jquery.min.js"></script>
        <script type="text/javascript" src="js/shCore.js"></script>
        <script type="text/javascript" src="js/shBrushJScript.js"></script>
        <script type="text/javascript" src="js/shBrushCss.js"></script>
@@ -179,34 +179,34 @@ $script.loaded(['foo', 'jquery', 'colorbox'], function() {
          <h2>Paths, thumbnails, jsons</h2>
          <table>
            <tr>
-             <td valign="top" width="1000px" style="padding-right:20px;text-align:justify">
+             <td style="vertical-align:top;width:1000px;padding-right:20px;text-align:justify">
                <ol class="tree">
                  <li>
-                   <label for="admin">admin</label> 
+                   <label>admin</label> 
                    <ol>
                     <li>
-                       <label for="common">common <span class="descr">general libraries, see <a href="#en-Plugin-3">section 2.3</a></span></label> 
-                       <label for="pages">pages <span class="descr">plugins, see <a href="#en-Plugin">section 2</a></span></label> 
+                       <label>common <span class="descr">common php and js classes</span></label> 
+                       <label>pages <span class="descr">plugins</span></label> 
                     </li>
                    </ol>
 
-                  <label for="cache">cache</label> 
+                  <label>cache</label> 
                    <ol>
                     <li>
-                       <label for="json">json</label> 
+                       <label>json</label> 
                        <ol>
+                          <li class="file">cache.json <span class="descr">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;json containing the metadata of the index, <a href="#" onclick="return showHide('json-div');">click here</a> to see an example (content will appear bellow the list of files)</span></li>
+                          <li><label>directoryX</label></li>
                           <li>
-                             <li class="file">cache.json <span class="descr">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;json containing the metadata of the index, <a href="#" onclick="return showHide('json-div');">click here</a> to see an example (content will appear bellow the list of files)</span></li>
-                             <label for="directoryX">directoryX</label> 
                              <ol>
                               <li class="file">cache.json <span class="descr">json containing the metadata of directoryX, <a href="#" onclick="return showHide('json-div');">click here</a> to see an example (content will appear bellow the list of files)</span></li>
                              </ol>
                           </li>
                        </ol>
-                       <label for="thumbs">thumbs</label> 
+                       <label>thumbs</label> 
                        <ol>
                           <li>
-                             <label for="admin">directoryX</label> 
+                             <label>directoryX</label> 
                              <ol>
                               <li class="file">picX_r.jpg <span class="descr">main thumbnail for picX; size configured in the admin</span></li>
                               <li class="file">picX_b.jpg <span class="descr">big thumbnail, width=350px, height depends on the original height</span></li>
@@ -218,10 +218,10 @@ $script.loaded(['foo', 'jquery', 'colorbox'], function() {
                     </li>
                    </ol>
 
-                  <label for="pics">pics</label> 
+                  <label>pics</label> 
                   <ol>
                         <li>
-                           <label for="admin">directoryX</label> 
+                           <label>directoryX</label> 
                            <ol>
                             <li class="file">mygpx.gpx</li>
                             <li class="file">picX.jpg</li>
@@ -232,14 +232,14 @@ $script.loaded(['foo', 'jquery', 'colorbox'], function() {
                         </li>
                      </ol>
 
-                  <label for="themes">themes</label> 
+                  <label>themes</label> 
                   <ol>
                         <li>
-                           <label for="themeX">themeX</label> 
+                           <label>themeX</label> 
                         </li>
                      </ol>
 
-                  <label for="themes">scripts</label> 
+                  <label>scripts</label> 
                  </li>
                </ol>
              </td>
@@ -322,16 +322,16 @@ $script.loaded(['foo', 'jquery', 'colorbox'], function() {
             <li>Once you have created these files with their minimal content (see bellow), update the administration options to add your theme to the gallery.</li>
             <li>Go in the gallery and enjoy. If you want to update your theme, simply edit the .css and .js files (no need to go in the administration).
          </ul>
-         
+
          Click on the files bellow to show the <b>minimal content</b> of the css and js files.<br/>
 
          </div>
          <ol class="tree">
            <li>
-             <label for="themes">themes</label> 
+             <label>themes</label> 
              <ol>
                <li>
-                 <label for="folder1">mytheme</label> 
+                 <label>mytheme</label> 
                  <ol>
                    <li class="file"><a href="#" onclick="hide('theme-js'); return showHide('theme-css');">main.css</a> [click or download <a href="code/mytheme/main.css">full file</a>]</li>
                    <li class="file"><a href="#" onclick="hide('theme-css'); return showHide('theme-js');">main.js</a> [click or download <a href="code/mytheme/main.js">full file</a>]</li>
@@ -409,7 +409,7 @@ var myTheme = {
     * transition between pages (fadeIn/fadeOut)
     */
    animateContent : false,
- 
+
    /*
    * Called on all pages, with or without an argument. May be used to display a breadcrumb or anything you want.
    * @json: /!\ the json being displayed or *undefined* when performing a search
@@ -417,7 +417,7 @@ var myTheme = {
    showHeader:function(json) {
       // Simplest code: do nothing.
    },
- 
+
    /*
    * Called multiple times on most pages to display content.
    * @content the content to display (e.g., 'dirs', 'pics', 'vids', 'gpx', ...)
@@ -431,7 +431,7 @@ var myTheme = {
         default: return jGallery.defaultContent(content, json);
       }
    },
- 
+
    /*
    * Called to display a search result
    * @dataFull: the galleries that match all searched keywords
@@ -449,7 +449,7 @@ var myTheme = {
    showSearchResults:function(data, keywords) {
      if(!data)
        return;
-     
+
      for (var i in data) {
        var res = {};
        res.ID = data[i].ID;
@@ -457,10 +457,10 @@ var myTheme = {
        res.descr = data[i].descr;
        res.starred = data[i].starred;
        res.completeurl = data[i].url;
-     
+
        res.title = jGallery.highlightText(data[i].url, keywords);
        res.thumb = data[i].url+'/'+data[i].thumbs[0];
-     
+
        $("#dirTpl").tmpl(res).appendTo('#search_results');
        $('#dir'+res.ID).click({url:res.url}, function(ev) {
          ev.preventDefault();
@@ -468,7 +468,7 @@ var myTheme = {
        });
      }
    },
- 
+
    /*
     * Called to display an error.
     * @data: use data.Error to get the error message
@@ -476,7 +476,7 @@ var myTheme = {
    showError:function(data) {
      $("#errorTpl").tmpl(data).appendTo('#content');
    },
-     
+
    /*
     * Called before displaying the first page and when the user
     * changes the gallery language.
@@ -508,7 +508,7 @@ var myTheme = {
    showDirs:function(json) {
        if(!json.dirs)
            return;
-     
+
      var dirs = [];
      var dirUrl = jGalleryModel.pageToUrl(json.realurl);
      for (var i in json.dirs) {
@@ -522,9 +522,9 @@ var myTheme = {
          /* you may also want to set .day , .month, .year and .starred  */
          /* you can also specify a .separator (html string) that will show before the directory */
          /* see the dirTpl template in /index.html to get the list of variables used by the template */
-     
+
          $("#dirTpl").tmpl(dirs[i]).appendTo('#content');
-     
+
          $('#dir'+dirs[i].ID).css('opacity', 1);
          $('#dir'+dirs[i].ID+' img').css('opacity', 1);
          $('#dir'+dirs[i].ID).click({url:json.dirs[i].url}, function(ev) {
@@ -533,7 +533,7 @@ var myTheme = {
          });
      }
    },
-  
+
    /*
    * Called to display pictures
    * @json: the json being displayed; pictures are in the json.pics field.
@@ -541,7 +541,7 @@ var myTheme = {
    showPics:function(json) {
      if(!json.pics)
        return;
-     
+
      var pics = [];
      var dirUrl = jGalleryModel.pageToUrl(json.realurl);
      for (var i in json.pics) {
@@ -555,10 +555,10 @@ var myTheme = {
        $("#picTpl").tmpl(pics[i]).appendTo('#content');
        $('#pic'+i+' img').css('opacity', 1);
      }
-     
+
      $("a[rel*='gal']").colorbox({slideshow:true, slideshowSpeed:3500, slideshowAuto:false, loop:false, maxWidth:'90%', maxHeight:'90%'});
    },
-  
+
    /*
    * Called to display videos
    * @json: the json being displayed; videos are in the json.vids field.
@@ -566,7 +566,7 @@ var myTheme = {
    showVids:function(json) {
      if(!json.vids)
        return;
-     
+
      var dirUrl = jGalleryModel.pageToUrl(json.realurl);
      var vids = [];
      for (var i in json.vids) {
@@ -581,7 +581,7 @@ var myTheme = {
      }
    },
 };
- 
+
             </pre>
          </div>
 
@@ -621,10 +621,10 @@ var myTheme = {
 
          <ol class="tree">
             <li>
-            <label for="themes">pages</label> 
+            <label>pages</label> 
             <ol>
                <li>
-               <label for="folder1">myplugin</label> 
+               <label>myplugin</label> 
                <ol>
                   <li class="file"><a href="#" onclick="return showHide('content-index');">index.php</a> [click or download <a href="./code/myplugin1/index.php.txt">the file</a>]</li>
                </ol>
@@ -688,25 +688,25 @@ class Pages_Myplugin_Index {
 
          <ol class="tree">
             <li>
-            <label for="themes">pages</label> 
+            <label>pages</label> 
             <ol>
                <li>
-               <label for="folder1">myplugin</label> 
+               <label>myplugin</label> 
                <ol>
                   <li class="file"><a href="#" onclick="hide('content2-jso'); hide('content2-js'); hide('content2-tpl');hide('content2-jsl');return showHide('content2-index');">index.php</a> [click or download <a href="./code/myplugin2/index.php.txt">the file</a>]</li>
-                  <label for="folder1">scripts</label> 
+                  <li><label>scripts</label> 
                   <ol>
                      <li class="file"><a href="#" onclick="hide('content2-jso'); hide('content2-index');hide('content2-tpl'); hide('content2-jsl');return showHide('content2-js');">index.myplugin.js</a> [click or download <a href="./code/myplugin2/scripts/index.myplugin.js">the file</a>]</li>
-                     <label for="folder1">lang</label> 
+                     <li><label>lang</label> 
                      <ol>
                         <li class="file"><a href="#" onclick="hide('content2-jso'); hide('content2-js');hide('content2-index');hide('content2-tpl'); return showHide('content2-jsl');">index_en.js</a> [click or download <a href="./code/myplugin2/scripts/lang/index_en.js">the file</a>]</li>
                         <li class="file"><a href="#" onclick="hide('content2-jsl'); hide('content2-js');hide('content2-index');hide('content2-tpl'); return showHide('content2-jso');">option_en.js</a> [click or download <a href="./code/myplugin2/scripts/lang/option_en.js">the file</a>]</li>
-                      </ol>
-                   </ol>
-                  <label for="folder1">tpl</label> 
+                      </ol></li>
+                   </ol></li>
+                  <li><label>tpl</label> 
                   <ol>
                      <li class="file"><a href="#" onclick="hide('content2-jso'); hide('content2-index');hide('content2-js');hide('content2-jsl'); return showHide('content2-tpl');">index.tpl</a> [click or download <a href="./code/myplugin2/tpl/index.tpl">the file</a>]</li>
-                   </ol>
+                   </ol></li>
                </ol>
                </li>
             </ol>
@@ -760,7 +760,7 @@ class Pages_Myplugin_Index {
       // see main.js file to see where myplugin_post_var is set.
       if(Controller::getParameter('myplugin_post_var', null))
          $json['hashello'] =  Controller::getParameter('myplugin_post_var', null);
-      
+
       return $json;
    }
 };
@@ -868,26 +868,26 @@ known_sentences.concat({
             <li>Display a new page in the gallery (e.g., face search).</li>
          </ul>
 
-         
+
          <h3>Views in the administration - Hello world</h3>
          A view plugin is composed of multiple "actions" (functions): the <b>mainAction</b> that displays the template and multiple other <b>fooAction</b> that are called asynchronously (via AJAX calls). See bellow for a simple Hello World plugin to understand how to perform AJAX calls. The gallery provides convenient functions to perform AJAX calls. <b>DO NOT TRY TO PERFORM AJAX CALLS BY HAND!</b> Indeed, the gallery needs security variables in each AJAX calls that are used internally to prevent XSS attacks. If you perform an AJAX call without these variables, your call will be rejected by the gallery. So, stick with the galleries AJAX functions or make sure to add the security variables to your calls!
 
          <ol class="tree">
             <li>
-            <label for="themes">pages</label> 
+            <label>pages</label> 
             <ol>
                <li>
-               <label for="folder1">myplugin</label> 
+               <label>myplugin</label> 
                <ol>
                   <li class="file"><a href="#" onclick="hide('hello-js'); hide('hello-tpl'); return showHide('hello-index');">index.php</a> [click or download <a href="./code/myplugin3/index.php.txt">the file</a>]</li>
                   <li>
-                     <label for="folder1">scripts</label>
+                     <label>scripts</label>
                      <ol>
                      <li class="file"><a href="#" onclick="hide('hello-tpl'); hide('hello-index'); return showHide('hello-js');">main.js</a> [click or download <a href="./code/myplugin3/scripts/main.js">the file</a>]</li>
                      </ol>
                   </li>
                   <li>
-                     <label for="folder1">tpl</label>
+                     <label>tpl</label>
                      <ol>
                      <li class="file"><a href="#" onclick="hide('hello-js'); hide('hello-index'); return showHide('hello-tpl');">index.tpl</a> [click or download <a href="./code/myplugin3/tpl/index.tpl">the file</a>]</li>
                      </ol>
@@ -904,7 +904,7 @@ known_sentences.concat({
             <pre class="brush: js;">
 $(document).ready(function() {
    var nclicks = 0;
-	$('#hello').click(function() {
+   $('#hello').click(function() {
       var batch = new Batch(ParallelBatch, function(data) {
          // All actions in the batch have completed
          // In this example we only launch one action (foo_bar) but you may want to launch multiple actions
@@ -917,7 +917,7 @@ $(document).ready(function() {
          // ...
          // batch1.launch();
          // batch2.launch(); // will only execute once batch1 has completed its action(s).
-		}, null);
+      }, null);
       batch.get({action:'myplugin.foo_bar', clicks:++nclicks}, function(data) {
          // will call /pages/myplugin/index.php?action=foo_bar&amp;clicks=nclicks&amp;custom_security_variables
          // that will automatically execute the fooBarAction() function of the index.php file
@@ -933,8 +933,8 @@ $(document).ready(function() {
          The administration uses the liteTemplate class to display templates from PHP. Alternatively you can also use the jQuery template plugin if you feel more comfortable displaying templates in JavaScript. Note that variables in liteTemplate are of the form {$VAR} whereas jQuery template plugin used ${var} (notice the emplacement of the $). 
 
             <pre class="brush: php;">
-<div id="hello">{$CLICK}</div>
-<div id="res"></div>
+&lt;div id="hello"&gt;{$CLICK}&lt;/div&gt;
+&lt;div id="res"&gt;&lt;/div&gt;
             </pre>
          </div>
 
@@ -989,14 +989,14 @@ class Pages_Myplugin_Index {
 
          <ol class="tree">
             <li>
-            <label for="themes">pages</label> 
+            <label>pages</label> 
             <ol>
                <li>
-               <label for="folder1">myplugin</label> 
+               <label>myplugin</label> 
                <ol>
                   <li class="file"><a href="#" onclick="hide('view-js'); return showHide('view-index');">index.php</a></li>
                   <li>
-                     <label for="folder1">scripts</label>
+                     <label>scripts</label>
                      <ol>
                      <li class="file"><a href="#" onclick="hide('view-index');return showHide('view-js');">jgallery.myplugin.js</a></li>
                      </ol>
@@ -1069,10 +1069,10 @@ config.pluginsInstances.push(FacePlugin);
 
          <h3>Available classes</h3>
          In the administration, you can use the following PHP classes:<br/>
-         <img src="php.svg" type="image/svg+xml" style="max-width:100%" />
+         <img src="php.svg" alt="php" style="max-width:100%" />
 
-         <br/><br/>In the gallery, you can use the following JS classes:</br>
-         <img src="js.svg" type="image/svg+xml" style="max-width:100%" />
+         <br/><br/>In the gallery, you can use the following JS classes:<br/>
+         <img src="js.svg" alt="js" style="max-width:100%" />
 
 
 
@@ -1131,7 +1131,7 @@ class Pages_Myplugin_Index {
 }
          </pre>
 
-         
+
          <h3>Translation in the administration</h3>
          The gallery will also automatically try to load translation files for your plugins. You need exactly two files for each language: one file that will be used to render the content of your templates and one file that will be used for the description of your plugin options. All text that is in a DOM element with a class "translate" will be translated (that works for inputs and selects too).
 
@@ -1143,16 +1143,16 @@ E.g.,
          Sample translation files for a plugin:
          <ol class="tree">
             <li>
-            <label for="themes">pages</label> 
+            <label>pages</label> 
             <ol>
                <li>
-               <label for="folder1">myplugin</label> 
+               <label>myplugin</label> 
                <ol>
                   <li>
-                     <label for="folder1">scripts</label>
+                     <label>scripts</label>
                      <ol>
                      <li>
-                        <label for="folder1">lang</label>
+                        <label>lang</label>
                         <ol>
                            <li class="file"><a href="#" onclick="hide('lang-option-js'); return showHide('lang-js');">en.js</a></li>
                            <li class="file"><a href="#" onclick="hide('lang-js'); return showHide('lang-option-js');">option_en.js</a></li>
@@ -1197,7 +1197,7 @@ known_sentences.concat({
    },
 };
          </pre>
-      
+
          To translate in the adminstration:
          <pre class="brush: js;">
 // Elements with a class="translate" will be translated automatically after the page load.
@@ -1225,15 +1225,16 @@ function inform(tag, type, add, params, div);
 inform('t2', 'success', true, [0, 1]);
          </pre>
       </div>
-         <div class="hidden">
-        <h2>Complete examples</h2>
+      <div class="hidden">
+         <h2>Complete examples</h2>
 
-        The gpx plugin is a good example of a content plugin. The face plugin is a good example of a view plugin. Both plugins are shipped with the gallery.
+         The gpx plugin is a good example of a content plugin. The face plugin is a good example of a view plugin. Both plugins are shipped with the gallery.
 
-     </div>
-  </div>
-      <script type="text/javascript">
-        SyntaxHighlighter.all()
-      </script>
-   </body>
+      </div>
+   </div>
+</div>
+   <script type="text/javascript">
+      SyntaxHighlighter.all()
+   </script>
+</body>
 </html>
