@@ -89,7 +89,13 @@
          }
 
          .hidden {
-            //display:none;
+            display:none;
+         }
+         .visible {
+            display:block;
+         }
+         .visible-menu {
+            font-weight:bold;
          }
    /*]]>*/
    </style>
@@ -130,13 +136,24 @@
                var text = $(v).text();
                var num = ((hid)?(hid+'.'):'')+(id+1);
                var link = uid++;
-               $(v).html(num + ' <a name='+link+'>'+text+'<\/a>');
-               $(v).attr('id', link);
-               div.append('<li>'+num+' <a href="#'+link+'">'+text+'<\/a><\/li><ul id="h'+rec+'_'+uid+'"><\/ul>');
+               $(v).html(num + ' <a name="no'+link+'">'+text+'<\/a>');
+               $(v).attr('id', "v"+link);
+               div.append('<li id="li_'+link+'">'+num+' <a href="#'+link+'">'+text+'<\/a><\/li><ul id="h'+rec+'_'+uid+'"><\/ul>');
+               $('#li_'+link+' a').click(function() { showElt(link); });
                buildMenu(v, $('#h'+rec+'_'+uid), rec+1, num);
             });
          }
          buildMenu(null, $('#mainmenu'), 1, null);
+         
+         function showElt(id) {
+            $('.visible').removeClass('visible');
+            $('.visible-menu').removeClass('visible-menu');
+            $('#v'+id).parents().filter('.hidden').addClass('visible');
+            $('#v'+id).parent().find('.hidden').addClass('visible');
+            $('#li_'+id).addClass('visible-menu');
+         }
+         showElt(window.location.hash?(window.location.hash.replace('#', '')):'');
+
        });
    //]]>
    </script>
@@ -1021,7 +1038,7 @@ class Pages_Myplugin_Index {
 </pre>
             </div>
 
-            <h3>Views in the gallery - Hello world</h3>This plugin will create a new view in the administration, that can be accessed via /yourgallery/#!myplugin. Note that if you want to do more complex things, you can overload the jGallery functions to put hooks where you want.<br />
+            <h3>Views in the gallery - Hello world</h3>This plugin will create a new view in the gallery, that can be accessed via /yourgallery/#!myplugin. Note that if you want to do more complex things, you can overload the jGallery functions to put hooks where you want.<br />
 
             <ol class="tree">
                <li>
