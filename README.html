@@ -1221,7 +1221,7 @@ class Pages_Myplugin_Index {
             <div id="lang-option-js" style="display:none">
                option_en.js and option_fr.js files:
                <pre class="brush: js;">
-/* This file will be used by the option */
+/* option_en.js This file will be used by the option */
 known_sentences.concat({
    'Hello World':'Hello World plugin',
    'my_option':'My option',
@@ -1229,7 +1229,7 @@ known_sentences.concat({
          
 </pre>
                <pre class="brush: js;">
-/* This file will be used by the option */
+/* option_fr.js This file will be used by the option */
 known_sentences.concat({
    'Hello World':'Plugin Hello World',
    'my_option':'Mon option',
@@ -1239,9 +1239,9 @@ known_sentences.concat({
             </div>
 
             <div id="lang-js" style="display:none">
-               en.js file, fr.js file would contain the same content but translated:
+               en.js file, fr.js file contain the same hash, but different translations:
                <pre class="brush: js;">
-/* This file will be used by your scripts */
+/* en.js This file will be used by your scripts */
 known_sentences.concat({
    't1':'Translation 1',
    't2':'{0} done / {1} total',
@@ -1249,6 +1249,17 @@ known_sentences.concat({
       return 'Translation 3: ' + args[0];
    },
 };
+</pre>
+               <pre class="brush: js;">
+/* fr.js This file will be used by your scripts */
+known_sentences.concat({
+   't1':'Traduction 1',
+   't2':'{0} fait / {1}',
+   't3':function(args) {
+      return 'Traduction 3: ' + args[0];
+   },
+};
+
          
 </pre>To translate in the adminstration:
                <pre class="brush: js;">
