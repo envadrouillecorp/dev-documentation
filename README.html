@@ -133,6 +133,8 @@
                elts = $(document).find('h'+rec);
 
             elts.each(function(id, v) {
+               uid++;
+
                var text = $(v).text();
                var num = ((hid)?(hid+'.'):'')+(id+1);
                var link = text.toLowerCase().replace(/\s|, /g, '-');
