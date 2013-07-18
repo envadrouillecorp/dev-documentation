@@ -135,7 +135,7 @@
             elts.each(function(id, v) {
                var text = $(v).text();
                var num = ((hid)?(hid+'.'):'')+(id+1);
-               var link = uid++;
+               var link = text.toLowerCase().replace(/\s|, /g, '-');
                $(v).html(num + ' <a name="no'+link+'">'+text+'<\/a>');
                $(v).attr('id', "v"+link);
                div.append('<li id="li_'+link+'">'+num+' <a href="#'+link+'">'+text+'<\/a><\/li><ul id="h'+rec+'_'+uid+'"><\/ul>');
