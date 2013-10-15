@@ -191,8 +191,6 @@
 
                <li>jQuery doTimeout plugin, see <a href="http://benalman.com/projects/jquery-dotimeout-plugin/">http://benalman.com/projects/jquery-dotimeout-plugin/</a></li>
 
-               <li>jQuery ColorBox v1.3.34 (slideshow plugin), see <a href="http://www.jacklmoore.com/colorbox">http://www.jacklmoore.com/colorbox</a></li>
-
                <li>A custom script loader named $script, see below.</li>
             </ul><br />
             To know when an API has been loaded, use the $script API as follows:
@@ -201,8 +199,8 @@ $script("http://domain/foo.js", "foo", function() {
    // code that will be executed once foo.js has been loaded
    // this function is optional, you can call $script with only 2 arguments
 });
-$script.loaded(['foo', 'jquery', 'colorbox'], function() {
-   // code that will get executed once foo, jquery and colorbox have been loaded
+$script.loaded(['foo', 'jquery'], function() {
+   // code that will get executed once foo and jquery have been loaded
 });
          
 </pre>
@@ -435,7 +433,7 @@ body {                      /* mandatory */
          </div>
 
          <div id="theme-js" style="display:none;">
-            A theme must implement 6 JavaScript function. Most of these functions are called with a json argument described in section "1.2 Paths, thumbnails, jsons" (click on the link next to the 'cache.json' files). You should not alter this json because it might be used internally or by other themes.<br />
+            A theme must implement 8 JavaScript function. Most of these functions are called with a json argument described in section "1.2 Paths, thumbnails, jsons" (click on the link next to the 'cache.json' files). You should not alter this json because it might be used internally or by other themes.<br />
             The simplest way to create this JavaScript file is to start from an existing theme.<br />
             <pre class="brush: js;">
 var myTheme = {
@@ -525,6 +523,13 @@ var myTheme = {
        // &lt;span class="translate"&gt;Hello&lt;/span&gt; will be shown as "Salut" in French
      }
    },
+
+   init:function() {
+      // Called once, when the theme is loaded
+   },
+   clean:function() {
+      // Called on every page change
+   },
 };
 // your theme must be in /theme/mytheme
 config.loadedThemes['mytheme'] = myTheme;
@@ -589,8 +594,6 @@ var myTheme = {
        $("#picTpl").tmpl(pics[i]).appendTo('#content');
        $('#pic'+i+' img').css('opacity', 1);
      }
-
-     $("a[rel*='gal']").colorbox({slideshow:true, slideshowSpeed:3500, slideshowAuto:false, loop:false, maxWidth:'90%', maxHeight:'90%'});
    },
 
    /*

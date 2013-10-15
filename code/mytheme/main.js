@@ -140,8 +140,6 @@ var myTheme = {
        $("#picTpl").tmpl(pics[i]).appendTo('#content');
        $('#pic'+i+' img').css('opacity', 1);
      }
-     
-     $("a[rel*='gal']").colorbox({slideshow:true, slideshowSpeed:3500, slideshowAuto:false, loop:false, maxWidth:'90%', maxHeight:'90%'});
    },
   
    /*
@@ -164,6 +162,11 @@ var myTheme = {
        };
        $("#vidTpl").tmpl(vids[i]).appendTo('#content');
      }
+   },
+
+   init:function() {
+   },
+   clean:function() {
    },
 };
 // your theme must be in /theme/mytheme
