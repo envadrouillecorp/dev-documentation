@@ -1,6 +1,3 @@
-RemoveHandler .php .tpl .js
-RemoveType .php .tpl .js
-php_flag engine off
 <Files *.*>
 ForceType application/octet-stream
 Header set Content-Disposition attachment
