@@ -705,16 +705,16 @@ class Pages_Myplugin_Index {
    }
 
    /* Called when the gallery writes a JSON. Add our field. */
-   public static function writeJSON($new_json_content, $old_json) {
-      $json = array();
+   public static function writeJSON($args) {
+      $json = &amp;$args['json']; 
 
+      $old_json = $args['old_json'];
       $files = $old_json-&gt;masterDirectory-&gt;getFiles();
       foreach($files as $f) {
          if($f-&gt;extension == 'hello') {
             $json['hashello'] = true;
          }
       }
-      return $json;
    }
 };
             
@@ -799,19 +799,22 @@ class Pages_Myplugin_Index {
        );
    }
 
-   public static function writeJSON($new_json_content, $old_json) {
-      $json = array();
+   public static function writeJSON($args) {
+      $json = &amp;$args['json']; 
+      $old_json = $args['old_json'];
+      $old_content = $old_json-&gt;get();
 
       // only write something in the json for the directory that is being updated
-      if(!$old_json-&gt;masterDirectory-&gt;isUpdated)
-         return $json;
+      if($old_json-&gt;masterDirectory-&gt;isUpdated) {
+         if(isset($old_content['hashello'])
+            $json['hashello'] = $old_content['hashello'];
+         return;
+      }
 
       // here we set the json.hashello field if something has been written in the text input of our plugin of the directory that is being updated
       // see main.js file to see where myplugin_post_var is set.
       if(Controller::getParameter('myplugin_post_var', null))
          $json['hashello'] =  Controller::getParameter('myplugin_post_var', null);
-
-      return $json;
    }
 };
             
