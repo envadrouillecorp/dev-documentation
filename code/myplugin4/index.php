@@ -1,3 +1,4 @@
+<?php
 /* WARNING: the name of the class is important! Make sure that if your plugin is in pages/myplugin/, then the class is named Pages_Myplugin_Index! */
 class Pages_Myplugin_Index {
    public static $description = "Hello World";

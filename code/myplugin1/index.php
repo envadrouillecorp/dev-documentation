@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
  * Do not forget to activate the plugin in the administration before testing!
@@ -40,8 +40,9 @@ class Pages_Myplugin_Index {
    }
 
    /* Called when the gallery writes a JSON. Add our static fields. */
-   public static function writeJSON($new_json_content, $old_json) {
-      $json = array();
+   public static function writeJSON($args) {
+      $json = &$args['json'];
+      $old_json = $args['old_json'];
 
       $files = $old_json->masterDirectory->getFiles();
       foreach($files as $f) {

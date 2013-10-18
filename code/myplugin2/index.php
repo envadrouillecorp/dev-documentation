@@ -1,3 +1,5 @@
+<?php
+
 /*
  * Do not forget to activate the plugin in the administration before testing!
  * WARNING: the name of the class is important! Make sure that if your plugin is in pages/myplugin/, then the class is named Pages_Myplugin_Index!
@@ -28,8 +30,8 @@ class Pages_Myplugin_Index {
        );
    }
  
-   public static function writeJSON($new_json_content, $old_json) {
-      $json = array();
+   public static function writeJSON($args) {
+      $json = &$args['json'];
  
       $files = $old_json->masterDirectory->getFiles();
       foreach($files as $f) {
